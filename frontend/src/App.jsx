@@ -12,6 +12,8 @@ import ForgotPassword from './components/ForgotPassword';
 
 import LoadingBar from "react-top-loading-bar";
 
+import Firstpage from "./components/Firstpage";
+
 
 
 
@@ -27,7 +29,11 @@ function App() {
 
       <Routes>
 
-        <Route path = "/" element = {<Login startLoading = {() => ref.current.continoussStart()} stopLoading={() => ref.current.complete()}  />} />
+        {/* <Route path = "/" element = {<Login startLoading = {() => ref.current.continoussStart()} stopLoading={() => ref.current.complete()}  />} /> */}
+        {/* <Route path = "/" element = {<Login startLoading = {() => ref.current.continoussStart()} stopLoading={() => ref.current.complete()}  />} /> */}
+
+        <Route path = '/' element = {<Firstpage />} />
+        <Route path = "/login" element = {<Login />} />
         <Route path = "/signup" element = {<Signup />} />
         <Route path = "/homepage" element = {<Homepage />} />
 
