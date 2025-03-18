@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatedBackground } from 'animated-backgrounds';
 import LoadingBar from "react-top-loading-bar";
-
+import { FaGoogle, FaApple, FaAmazon, FaFacebook, FaMicrosoft } from "react-icons/fa";
+import { SiMeta } from "react-icons/si";
 import Footer from "./footer";
 
 
@@ -46,17 +47,23 @@ const Firstpage = () => {
     if (ref.current) {
       ref.current.continuousStart(); // Start loading animation
       let progress = 0;
-      const interval = setInterval(() => {
+      const interval = setInterval(() => 
+      {
         progress += 20;
-        if (progress >= 90) {
+        if (progress >= 90) 
+        {
           clearInterval(interval);
           ref.current.complete(); // Complete animation
           setTimeout(() => navigate("/login"), 200);
-        } else {
+        } 
+        else 
+        {
           ref.current.static(progress);
         }
       }, 100);
-    } else {
+    } 
+    
+    else {
       console.error("Loading bar ref is null");
     }
   };
@@ -192,16 +199,37 @@ const Firstpage = () => {
           </div>
           
           {/* Trusted By Section */}
-          <div className="mt-20 text-center bg-white/1 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl relative">
-            <p className="text-white/60 mb-6">Trusted by professionals from companies like</p>
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-              <div className="text-white/70 font-bold text-xl">Google</div>
-              <div className="text-white/70 font-bold text-xl">Microsoft</div>
-              <div className="text-white/70 font-bold text-xl">Amazon</div>
-              <div className="text-white/70 font-bold text-xl">Apple</div>
-              <div className="text-white/70 font-bold text-xl">Meta</div>
+        <div className="mt-20 text-center bg-white/1 backdrop-blur-md p-8 rounded-2xl border border-white/20 shadow-2xl relative">
+          <p className="text-white/60 mb-8 text-lg">Trusted by professionals from companies like</p>
+          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
+            <div className="flex flex-col items-center text-white/70">
+              <FaGoogle className="text-3xl mb-2" />
+              <span className="font-medium">Google</span>
+            </div>
+            <div className="flex flex-col items-center text-white/70">
+              <FaMicrosoft className="text-3xl mb-2" />
+              <span className="font-medium">Microsoft</span>
+            </div>
+            <div className="flex flex-col items-center text-white/70">
+              <FaAmazon className="text-3xl mb-2" />
+              <span className="font-medium">Amazon</span>
+            </div>
+            <div className="flex flex-col items-center text-white/70">
+              <FaApple className="text-3xl mb-2" />
+              <span className="font-medium">Apple</span>
+            </div>
+            <div className="flex flex-col items-center text-white/70">
+              <SiMeta className="text-3xl mb-2" />
+              <span className="font-medium">Meta</span>
             </div>
           </div>
+        </div>
+
+
+
+
+
+
         </div>
         
         {/* Features Section */}
