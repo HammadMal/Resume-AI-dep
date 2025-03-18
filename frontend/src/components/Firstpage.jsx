@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatedBackground } from 'animated-backgrounds';
+import LoadingBar from "react-top-loading-bar";
+
+
 
 // import Pricing from "./Pricing";
 
@@ -12,6 +15,7 @@ import Pricing from "./pricing";
 const Firstpage = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
 
   useEffect(() => {
     setIsVisible(true);
@@ -19,24 +23,92 @@ const Firstpage = () => {
     // Add smooth scrolling behavior
     document.documentElement.style.scrollBehavior = "smooth";
     
-    // Cleanup function to remove the style when component unmounts
+    // Remove transition after animation completes
+    const timer = setTimeout(() => {
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.style.transition = 'none';
+      }
+    }, 1000);
+    
+    // Cleanup function
     return () => {
       document.documentElement.style.scrollBehavior = "";
+      clearTimeout(timer);
     };
   }, []);
 
   const handleGetStarted = () => {
-    navigate("/login");
+    if (ref.current) {
+      ref.current.continuousStart(); // Start loading animation
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 20;
+        if (progress >= 90) {
+          clearInterval(interval);
+          ref.current.complete(); // Complete animation
+          setTimeout(() => navigate("/login"), 200);
+        } else {
+          ref.current.static(progress);
+        }
+      }, 100);
+    } else {
+      console.error("Loading bar ref is null");
+    }
   };
+
+  
+  const handleSignIn = () => {
+    if (ref.current) {
+      ref.current.continuousStart(); // Start loading animation
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 20;
+        if (progress >= 90) {
+          clearInterval(interval);
+          ref.current.complete(); // Complete animation
+          setTimeout(() => navigate("/login"), 200);
+        } else {
+          ref.current.static(progress);
+        }
+      }, 100);
+    } else {
+      console.error("Loading bar ref is null");
+    }
+  };
+
+
+  // const handleupgraderesume = () => {
+  //   if (ref.current) {
+  //     ref.current.continuousStart(); // Start loading animation
+  //     let progress = 0;
+  //     const interval = setInterval(() => {
+  //       progress += 20;
+  //       if (progress >= 90) {
+  //         clearInterval(interval);
+  //         ref.current.complete(); // Complete animation
+  //         setTimeout(() => navigate("/login"), 200);
+  //       } else {
+  //         ref.current.static(progress);
+  //       }
+  //     }, 100);
+  //   } else {
+  //     console.error("Loading bar ref is null");
+  //   }
+  // };
+  
+
 
   return (
     <div className="min-h-screen relative overflow-hidden">
+              <LoadingBar color="#4f46e5" ref={ref} height={3} />
+
       {/* Animated Background */}
       <div className="absolute inset-0 z-0">
         <AnimatedBackground 
           animationName="auroraBorealis" 
           blendMode="normal" 
-          style={{ opacity: 0.9 }} 
+          style={{ opacity: 1 }} 
         />
       </div>
 
@@ -60,7 +132,7 @@ const Firstpage = () => {
 
           </nav>
           <button 
-            onClick={handleGetStarted}
+            onClick={handleSignIn}
             className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all duration-300"
           >
             Sign In
@@ -73,14 +145,14 @@ const Firstpage = () => {
         <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-20">
           
           {/* Hero Content */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between bg-white/1 backdrop-blur-md p-10 rounded-2xl border border-white/20 shadow-2xl relative">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between bg-white/1 backdrop-blur-md p-10 rounded-2xl border border-white/10 shadow-2xl relative">
             <div className="md:w-1/2 mb-12 md:mb-0">
               <span className="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white text-sm mb-6">
                 #1 Resume Analysis Tool for Job Seekers
               </span>
               
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-                Enhance Your <span style={{WebkitBackgroundClip: 'text', backgroundClip: 'text'}} className="inline-block text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Resume</span>  with AI Technology
+                Enhance Your Resume  with AI Technology
               </h1>
               
               <p className="text-lg md:text-xl text-white/80 mb-8 max-w-lg">

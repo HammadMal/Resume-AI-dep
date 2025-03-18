@@ -1,7 +1,45 @@
+import React, { useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import LoadingBar from "react-top-loading-bar";
+
 const TestimonialCardSection = () => {
+  const ref = useRef(null);
+  const navigate = useNavigate();
+
+
+  const handleupgraderesume = () => {
+    // if (ref.current) {
+    //   ref.current.continuousStart(); // Start loading animation
+    //   let progress = 0;
+    //   const interval = setInterval(() => {
+    //     progress += 20;
+    //     if (progress >= 90) {
+    //       clearInterval(interval);
+    //       ref.current.complete(); // Complete animation
+    //       setTimeout(() => navigate("/login"), 200);
+    //     } else {
+    //       ref.current.static(progress);
+    //     }
+    //   }, 100);
+    // } else {
+    //   console.error("Loading bar ref is null");
+    // }
+
+    navigate("/login");
+  };
+
+
     return (
+      <>
+      {/* Positioned at the top of the viewport */}
+        {/* <div className="fixed top-0 left-0 right-0 z-50">
+          <LoadingBar color="#f11946" ref={ref} />
+        </div> */}
+
       <div className="md:w-5/12">
-        <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl relative">
+
+
+        <div className="bg-white/2 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-2xl relative">
           <div className="absolute -top-4 -right-4 w-20 h-20 bg-purple-500/20 rounded-full blur-xl"></div>
           <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
           
@@ -44,11 +82,13 @@ const TestimonialCardSection = () => {
             <div className="bg-gradient-to-r from-blue-400 to-purple-500 h-1.5 rounded-full" style={{ width: "85%" }}></div>
           </div>
           
-          <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all font-medium shadow-lg">
+          <button onClick={handleupgraderesume} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all font-medium shadow-lg">
             Upgrade Your Resume Now
           </button>
         </div>
       </div>
+
+      </>
     );
   };
   
