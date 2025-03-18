@@ -35,7 +35,7 @@ const Signup = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Loading Bar */}
-      <LoadingBar color="#4f46e5" ref={ref} height={3} />
+      <LoadingBar color="#3F7D58" ref={ref} height={3} />
       
       {/* Animated Background */}
       <div className="absolute inset-0 z-0">
