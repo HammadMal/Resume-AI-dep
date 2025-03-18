@@ -55,7 +55,7 @@ const Login = () => {
         </div>
 
         {/* Overlay gradient for better text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1"></div>
+        <div className="fixed inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1 "></div>
         
         {/* Header/Navigation */}
         <header className="relative z-10 py-4 px-6 md:px-12">

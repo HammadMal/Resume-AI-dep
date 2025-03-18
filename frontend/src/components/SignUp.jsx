@@ -47,13 +47,13 @@ const Signup = () => {
       </div>
 
       {/* Overlay gradient for better text contrast */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1"></div>
+      <div className="fixed inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1 bg-fixed"></div>
       
       {/* Header/Navigation */}
       <header className="relative z-10 py-4 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-white/1 backdrop-blur-md rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">R</span>
             </div>
             <span className="text-white font-bold text-xl">ResumeAI</span>
