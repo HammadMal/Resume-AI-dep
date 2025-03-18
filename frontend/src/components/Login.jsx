@@ -61,7 +61,7 @@ const Login = () => {
         <header className="relative z-10 py-4 px-6 md:px-12">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">R</span>
               </div>
               <span className="text-white font-bold text-xl">ResumeAI</span>
@@ -72,7 +72,7 @@ const Login = () => {
         {/* Main Content */}
         <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
           <div className="w-full max-w-md">
-            <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 shadow-2xl">
+            <div className="bg-white/1 backdrop-blur-md p-8 rounded-2xl border border-white/20 shadow-2xl">
               <h2 className="text-3xl font-bold text-white text-center mb-8">Sign In</h2>
               
               <form className="space-y-6">

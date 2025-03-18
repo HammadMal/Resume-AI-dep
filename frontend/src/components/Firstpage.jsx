@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { AnimatedBackground } from 'animated-backgrounds';
 import LoadingBar from "react-top-loading-bar";
 
+import Footer from "./footer";
+
 
 
 // import Pricing from "./Pricing";
@@ -19,6 +21,8 @@ const Firstpage = () => {
 
   useEffect(() => {
     setIsVisible(true);
+    // console.log("Opacity debug:", opacity);
+
     
     // Add smooth scrolling behavior
     document.documentElement.style.scrollBehavior = "smooth";
@@ -114,7 +118,6 @@ const Firstpage = () => {
 
       {/* Overlay gradient for better text contrast */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1"></div>
-
       {/* Header/Navigation */}
       <header className="relative z-10 py-4 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -141,7 +144,7 @@ const Firstpage = () => {
       </header>
 
       {/* Hero Section */}
-      <main className={`relative z-10 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <main className={`relative z-10 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-100'}`}>
         <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-20">
           
           {/* Hero Content */}
@@ -304,6 +307,9 @@ const Firstpage = () => {
 
         <MarqueeDemo />
 
+        {/* Footer */}
+        
+        <Footer />
 
 
 
