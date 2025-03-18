@@ -2,6 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatedBackground } from 'animated-backgrounds';
 
+// import Pricing from "./Pricing";
+
+import TestimonialCardSection from "./testemonialcard";
+import MarqueeDemo from "./reviews";
+
+import Pricing from "./pricing";
+
 const Firstpage = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
@@ -49,6 +56,8 @@ const Firstpage = () => {
             <a href="#features" className="text-white/80 hover:text-white transition-colors">Features</a>
             <a href="#how-it-works" className="text-white/80 hover:text-white transition-colors">How It Works</a>
             <a href="#pricing" className="text-white/80 hover:text-white transition-colors">Pricing</a>
+            <a href="#Reviews" className="text-white/80 hover:text-white transition-colors">Reviews</a>
+
           </nav>
           <button 
             onClick={handleGetStarted}
@@ -64,14 +73,14 @@ const Firstpage = () => {
         <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-20">
           
           {/* Hero Content */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between bg-white/1 backdrop-blur-md p-10 rounded-2xl border border-white/20 shadow-2xl relative">
             <div className="md:w-1/2 mb-12 md:mb-0">
               <span className="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white text-sm mb-6">
                 #1 Resume Analysis Tool for Job Seekers
               </span>
               
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-                Enhance Your <span style={{WebkitBackgroundClip: 'text', backgroundClip: 'text'}} className="inline-block text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Resume</span> with AI Technology
+                Enhance Your <span style={{WebkitBackgroundClip: 'text', backgroundClip: 'text'}} className="inline-block text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Resume</span>  with AI Technology
               </h1>
               
               <p className="text-lg md:text-xl text-white/80 mb-8 max-w-lg">
@@ -104,55 +113,11 @@ const Firstpage = () => {
             </div>
             
             {/* Hero Image/Card */}
-            <div className="md:w-5/12">
-              <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl relative">
-                <div className="absolute -top-4 -right-4 w-20 h-20 bg-purple-500/20 rounded-full blur-xl"></div>
-                <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
-                
-                {/* Mock Resume Analysis UI */}
-                <div className="bg-white/5 p-4 rounded-xl mb-4">
-                  <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-white font-semibold">Resume Score</h3>
-                    <span className="text-green-400 font-bold">82%</span>
-                  </div>
-                  <div className="w-full bg-white/10 rounded-full h-2.5">
-                    <div className="bg-gradient-to-r from-blue-400 to-green-400 h-2.5 rounded-full" style={{ width: "82%" }}></div>
-                  </div>
-                </div>
-                
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 rounded-full bg-green-400/20 flex items-center justify-center text-green-300 text-xs mt-0.5">✓</div>
-                    <div>
-                      <h4 className="text-white font-medium">Professional Summary</h4>
-                      <p className="text-white/70 text-sm">Strong summary that highlights your value proposition</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 rounded-full bg-yellow-400/20 flex items-center justify-center text-yellow-300 text-xs mt-0.5">!</div>
-                    <div>
-                      <h4 className="text-white font-medium">Skills Section</h4>
-                      <p className="text-white/70 text-sm">Add more relevant keywords for your target position</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 rounded-full bg-red-400/20 flex items-center justify-center text-red-300 text-xs mt-0.5">×</div>
-                    <div>
-                      <h4 className="text-white font-medium">ATS Compatibility</h4>
-                      <p className="text-white/70 text-sm">Complex formatting may cause issues with ATS</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <button className="w-full bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl transition-all">
-                  View Detailed Analysis
-                </button>
-              </div>
-            </div>
+           <TestimonialCardSection />
           </div>
           
           {/* Trusted By Section */}
-          <div className="mt-20 text-center">
+          <div className="mt-20 text-center bg-white/1 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl relative">
             <p className="text-white/60 mb-6">Trusted by professionals from companies like</p>
             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
               <div className="text-white/70 font-bold text-xl">Google</div>
@@ -164,34 +129,121 @@ const Firstpage = () => {
           </div>
         </div>
         
-        {/* Features Highlights */}
-        <div id="features" className="max-w-7xl mx-auto px-6 md:px-12 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
-                <span className="text-blue-400 text-2xl">📝</span>
-              </div>
-              <h3 className="text-white text-xl font-semibold mb-2">AI-Powered Analysis</h3>
-              <p className="text-white/70">Our advanced algorithms evaluate your resume against industry standards and job requirements.</p>
-            </div>
+        {/* Features Section */}
+<div id="features" className="max-w-7xl mx-auto px-6 md:px-12 py-16 bg-white/1 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl relative">
+  {/* Section Header */}
+  <div className="text-center mb-12">
+    <span className="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white text-sm mb-4">
+      Features
+    </span>
+    <h2 className="text-3xl md:text-4xl font-bold text-white">What makes us different?</h2>
+  </div>
+  
+  {/* Feature Cards */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
+      <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+        <span className="text-blue-400 text-2xl">📝</span>
+      </div>
+      <h3 className="text-white text-xl font-semibold mb-2">AI-Powered Analysis</h3>
+      <p className="text-white/70">Our advanced algorithms evaluate your resume against industry standards and job requirements.</p>
+    </div>
+    
+    <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
+      <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+        <span className="text-purple-400 text-2xl">🎯</span>
+      </div>
+      <h3 className="text-white text-xl font-semibold mb-2">Job-Specific Feedback</h3>
+      <p className="text-white/70">Get personalized recommendations to optimize your resume for specific positions and industries.</p>
+    </div>
+    
+    <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
+      <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4">
+        <span className="text-green-400 text-2xl">📊</span>
+      </div>
+      <h3 className="text-white text-xl font-semibold mb-2">ATS Optimization</h3>
+      <p className="text-white/70">Ensure your resume passes through Applicant Tracking Systems with our compatibility checker.</p>
+    </div>
+  </div>
+</div>
+
+
+          {/* How It Works Section */}
+          {/* <div id="how-it-works" className="max-w-4xl mx-auto px-6 md:px-12 py-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">How it works?</h2>
+            <h3 className="text-xl md:text-2xl text-white/80 text-center mb-12">What happens behind the scenes?</h3> */}
+
+<div id="how-it-works" className="max-w-7xl mx-auto px-6 md:px-12 py-16 bg-white/1 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl relative mt-20">
+  {/* Section Header */}
+  <div className="text-center mb-12">
+    <span className="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white text-sm mb-4">
+      How it works?
+    </span>
+    <h2 className="text-3xl md:text-4xl font-bold text-white">What is happening behind the scenes?</h2>
+  </div>
             
-            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
-              <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
-                <span className="text-purple-400 text-2xl">🎯</span>
+            <div className="space-y-16">
+              {/* Upload Resume Section */}
+              <div className="text-center bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
+                <h3 className="text-2xl font-semibold text-white mb-4">Upload Your Resume</h3>
+                <p className="text-white/70 mb-2">
+                  Upload your resume in any of the supported formats (PDF, Word, or Plain Text).
+                </p>
+                <p className="text-white/70">
+                  Drag and drop or select the file directly from your computer.
+                </p>
               </div>
-              <h3 className="text-white text-xl font-semibold mb-2">Job-Specific Feedback</h3>
-              <p className="text-white/70">Get personalized recommendations to optimize your resume for specific positions and industries.</p>
-            </div>
-            
-            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
-              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4">
-                <span className="text-green-400 text-2xl">📊</span>
+              
+              {/* Paste Job Description Section */}
+              <div className="text-center bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
+                <h3 className="text-2xl font-semibold text-white mb-4">Paste Job Description</h3>
+                <p className="text-white/70">
+                  Paste the job description you are applying for to compare it with your resume.
+                  This allows the system to match relevant keywords and content.
+                </p>
               </div>
-              <h3 className="text-white text-xl font-semibold mb-2">ATS Optimization</h3>
-              <p className="text-white/70">Ensure your resume passes through Applicant Tracking Systems with our compatibility checker.</p>
+              
+              {/* AI-Powered Analysis Section */}
+              <div className="text-center bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
+                <h3 className="text-2xl font-semibold text-white mb-4">AI-Powered Analysis</h3>
+                <p className="text-white/70">
+                  Our system uses Natural Language Processing (NLP) and Machine Learning (ML) models to 
+                  analyze the structure, grammar, keyword relevance, and overall quality of your resume.
+                </p>
+              </div>
+              
+              {/* Get Instant Feedback Section */}
+              <div className="text-center bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
+                <h3 className="text-2xl font-semibold text-white mb-4">Get Instant Feedback!</h3>
+                <p className="text-white/70">
+                  Receive detailed feedback and a quality score for your resume.
+                  Actionable suggestions are provided to improve your resume for better job prospects.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+
+
+        {/* Pricing Section */}
+
+        <Pricing />
+
+        {/* Reviews Section */}
+
+        <MarqueeDemo />
+
+
+
+
+
+
+
+
+
+
+
+
+
       </main>
     </div>
   );
