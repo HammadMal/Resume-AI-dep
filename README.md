@@ -65,7 +65,7 @@ The **AI-Powered Resume Checker** is a web application that leverages **Natural 
    ```
 4. **Run the backend**
    ```bash
-   python app.py
+   node server.js
    ```
 5. **Run the frontend**
    ```bash
