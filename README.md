@@ -90,4 +90,4 @@ The **AI-Powered Resume Checker** is a web application that leverages **Natural 
 - Reach out via GitHub or email for any queries.
 
 ---
-🛠 Developed by **Group 2** for the **Software Engineering Project** at **Habib University** 🎓🚀
+🛠 Under development by **Group 2** for the **Software Engineering Project** at **Habib University** 🎓🚀
