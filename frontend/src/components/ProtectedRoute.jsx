@@ -14,10 +14,11 @@ const ProtectedRoute = ({ children }) => {
   }
 
   // Redirect to login if not authenticated
-  if (!user) {
+  const token = localStorage.getItem('userToken');
+
+  if (!user && !token) {
     return <Navigate to="/login" />;
   }
-
   // Render the protected component if authenticated
   return children;
 };

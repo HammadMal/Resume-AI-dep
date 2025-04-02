@@ -2,12 +2,16 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const colors = require('colors');
+const session = require('express-session'); // ✅ NEW
+const passport = require('passport');       // ✅ NEW
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const userRoutes = require('./routes/userRoutes');
 
 // Load environment variables
 dotenv.config();
+require('./config/passport')(passport); // ✅ Initialize passport strategy
+
 
 // Connect to database
 connectDB();
@@ -18,6 +22,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(
+  session({
+    secret: 'keyboard cat', // You can use process.env.SECRET instead
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+app.use(passport.initialize());   // ✅
+app.use(passport.session());      // ✅
+
 
 // Routes
 app.use('/api/users', userRoutes);

@@ -12,15 +12,31 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on initial load
-    const user = authService.getCurrentUser();
-    
-    if (user) {
-      setUser(user);
-    }
-    
-    setLoading(false);
+    const loadUser = async () => {
+      // First check: traditional login
+      let localUser = authService.getCurrentUser();
+  
+      if (localUser) {
+        setUser(localUser);
+      } else {
+        // If no user object but a token exists, check Google login
+        const token = localStorage.getItem('userToken');
+        if (token) {
+          const googleUser = await authService.getGoogleUser();
+          if (googleUser) {
+            setUser(googleUser);
+            // Optional: save full user for consistency
+            localStorage.setItem('user', JSON.stringify(googleUser));
+          }
+        }
+      }
+  
+      setLoading(false);
+    };
+  
+    loadUser();
   }, []);
+  
 
   // Login function
   const login = async (email, password) => {

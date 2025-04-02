@@ -8,9 +8,12 @@ import LoadingBar from "react-top-loading-bar";
 import Firstpage from "./components/Firstpage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import GoogleAuthHandler from "./components/GoogleAuthHandler";
+
 
 function App() {
   const ref = useRef(null); // Create a reference for the loading bar
+  // useGoogleRedirect();
   
   return (
     <AuthProvider>
@@ -27,6 +30,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/auth/google" element={<GoogleAuthHandler />} />
         </Routes>
       </Router>
     </AuthProvider>

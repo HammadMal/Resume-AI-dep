@@ -65,6 +65,10 @@ const Login = () => {
       }, 800);
     };
 
+    const handleGoogleLogin = () => {
+      window.location.href = 'http://localhost:5000/api/users/google';
+    };
+
     return (
       <div className="min-h-screen relative overflow-hidden">
         {/* Loading Bar */}
@@ -180,6 +184,7 @@ const Login = () => {
                 
                 <div className="mt-6">
                   <button
+                    onClick={handleGoogleLogin}
                     type="button"
                     className="w-full flex items-center justify-center gap-3 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-xl p-3 hover:bg-white/20 transition-all"
                   >
