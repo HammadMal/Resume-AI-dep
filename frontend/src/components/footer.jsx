@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import transparent from "../assets/aa.png";
+
 const Footer = () => {
   return (
     <footer className="bg-transparent backdrop-blur-sm border-t border-white/10 pt-16 pb-6 px-6 md:px-12 relative z-10">
@@ -8,9 +10,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="lg:flex lg:items-start flex-col">
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">R</span>
-              </div>
+             <div>
+                           <img src={transparent} alt="Logo" className="w-10 h-10" />
+                         </div>
               <span className="text-white font-bold text-xl">ResumeAI</span>
             </div>
             <p className="text-white/60 text-sm mt-2">
