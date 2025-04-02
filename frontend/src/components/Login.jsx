@@ -1,27 +1,52 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 import { AnimatedBackground } from 'animated-backgrounds';
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
     const navigate = useNavigate();
     const ref = useRef(null);
+    const { login } = useAuth();
+    const [formData, setFormData] = useState({
+      email: '',
+      password: '',
+      rememberMe: false
+    });
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSignIn = () => {
+    const { email, password, rememberMe } = formData;
+
+    const handleChange = (e) => {
+      const { name, value, type, checked } = e.target;
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    };
+
+    const handleSignIn = async (e) => {
+      e.preventDefault();
+      setError('');
+      
+      if (!email || !password) {
+        setError('Please fill in all fields');
+        return;
+      }
+
+      setIsLoading(true);
       ref.current.continuousStart();
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 20;
-        if (progress >= 90) {
-          clearInterval(interval);
-          ref.current.complete();
-          setTimeout(() => {
-            navigate("/homepage");
-          }, 200);
-        } else {
-          ref.current.static(progress);
-        }
-      }, 100);
+      
+      try {
+        await login(email, password);
+        ref.current.complete();
+        navigate("/homepage");
+      } catch (error) {
+        setError(error.message);
+        ref.current.complete();
+        setIsLoading(false);
+      }
     };
 
     const handleRegisterClick = () => {
@@ -75,12 +100,21 @@ const Login = () => {
             <div className="bg-white/1 backdrop-blur-md p-8 rounded-2xl border border-white/20 shadow-2xl">
               <h2 className="text-3xl font-bold text-white text-center mb-8">Sign In</h2>
               
-              <form className="space-y-6">
+              {error && (
+                <div className="bg-red-500/20 border border-red-500/50 text-white p-3 rounded-lg mb-6">
+                  {error}
+                </div>
+              )}
+              
+              <form className="space-y-6" onSubmit={handleSignIn}>
                 <div>
                   <label className="block text-white text-sm font-medium mb-2">Email</label>
                   <div className="relative">
                     <input 
                       type="email" 
+                      name="email"
+                      value={email}
+                      onChange={handleChange}
                       className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Enter your email"
                     />
@@ -92,6 +126,9 @@ const Login = () => {
                   <div className="relative">
                     <input 
                       type="password" 
+                      name="password"
+                      value={password}
+                      onChange={handleChange}
                       className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Enter your password"
                     />
@@ -102,8 +139,10 @@ const Login = () => {
                   <div className="flex items-center">
                     <input 
                       id="remember-me" 
-                      name="remember-me" 
+                      name="rememberMe" 
                       type="checkbox" 
+                      checked={rememberMe}
+                      onChange={handleChange}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
                     />
                     <label htmlFor="remember-me" className="ml-2 block text-sm text-white">
@@ -121,11 +160,11 @@ const Login = () => {
                 </div>
                 
                 <button
-                  type="button"
-                  onClick={handleSignIn}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all duration-300 font-medium shadow-lg"
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all duration-300 font-medium shadow-lg disabled:opacity-70"
                 >
-                  Sign In
+                  {isLoading ? 'Signing In...' : 'Sign In'}
                 </button>
               </form>
               

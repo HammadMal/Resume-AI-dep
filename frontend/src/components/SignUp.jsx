@@ -1,11 +1,33 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 import { AnimatedBackground } from 'animated-backgrounds';
+import { useAuth } from "../context/AuthContext";
 
 const Signup = () => {
   const navigate = useNavigate();
   const ref = useRef(null);
+  const { register } = useAuth();
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    agreeToTerms: false
+  });
+  
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { name, email, password, agreeToTerms } = formData;
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
   const handleLoginClick = () => {
     ref.current.continuousStart();
@@ -15,21 +37,38 @@ const Signup = () => {
     }, 1000);
   };
 
-  const handleSignup = () => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setError('');
+    
+    // Validate form
+    if (!name || !email || !password) {
+      setError('Please fill in all fields');
+      return;
+    }
+    
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    
+    if (!agreeToTerms) {
+      setError('Please agree to the Terms of Service and Privacy Policy');
+      return;
+    }
+    
+    setIsLoading(true);
     ref.current.continuousStart();
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 20;
-      if (progress >= 90) {
-        clearInterval(interval);
-        ref.current.complete();
-        setTimeout(() => {
-          navigate("/homepage");
-        }, 200);
-      } else {
-        ref.current.static(progress);
-      }
-    }, 100);
+    
+    try {
+      await register(name, email, password);
+      ref.current.complete();
+      navigate("/homepage");
+    } catch (error) {
+      setError(error.message);
+      ref.current.complete();
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -68,12 +107,21 @@ const Signup = () => {
             <h2 className="text-3xl font-bold text-white text-center mb-2">Create Account</h2>
             <p className="text-white/70 text-center mb-8">Join thousands of job seekers using ResumeAI</p>
             
-            <form className="space-y-6">
+            {error && (
+              <div className="bg-red-500/20 border border-red-500/50 text-white p-3 rounded-lg mb-6">
+                {error}
+              </div>
+            )}
+            
+            <form className="space-y-6" onSubmit={handleSignup}>
               <div>
                 <label className="block text-white text-sm font-medium mb-2">Full Name</label>
                 <div className="relative">
                   <input 
                     type="text" 
+                    name="name"
+                    value={name}
+                    onChange={handleChange}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter your full name"
                   />
@@ -85,6 +133,9 @@ const Signup = () => {
                 <div className="relative">
                   <input 
                     type="email" 
+                    name="email"
+                    value={email}
+                    onChange={handleChange}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter your email"
                   />
@@ -96,6 +147,9 @@ const Signup = () => {
                 <div className="relative">
                   <input 
                     type="password" 
+                    name="password"
+                    value={password}
+                    onChange={handleChange}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Create a strong password"
                   />
@@ -105,8 +159,10 @@ const Signup = () => {
               <div className="flex items-center">
                 <input 
                   id="terms" 
-                  name="terms" 
+                  name="agreeToTerms" 
                   type="checkbox" 
+                  checked={agreeToTerms}
+                  onChange={handleChange}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
                 />
                 <label htmlFor="terms" className="ml-2 block text-sm text-white">
@@ -115,11 +171,11 @@ const Signup = () => {
               </div>
               
               <button
-                type="button"
-                onClick={handleSignup}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all duration-300 font-medium shadow-lg"
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all duration-300 font-medium shadow-lg disabled:opacity-70"
               >
-                Create Account
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </button>
             </form>
             
