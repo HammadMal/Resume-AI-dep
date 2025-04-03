@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 import { AnimatedBackground } from 'animated-backgrounds';
 import { useAuth } from "../context/AuthContext";
+import transparent from "../assets/aa.png";
+
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -94,11 +96,11 @@ const Signup = () => {
       
       {/* Header/Navigation */}
       <header className="relative z-10 py-4 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div className="max-w-7xl mx-auto flex justify-between items-center mt-10">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">R</span>
-            </div>
+            <div>
+                          <img src={transparent} alt="Logo" className="w-10 h-10" />
+                        </div>
             <span className="text-white font-bold text-xl">ResumeAI</span>
           </Link>
         </div>

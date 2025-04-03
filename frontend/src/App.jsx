@@ -10,6 +10,10 @@ import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import GoogleAuthHandler from "./components/GoogleAuthHandler";
 
+import VerifyOTP from "./components/VerifyOTP";
+
+import ResetPassword from "./components/ResetPassword";
+
 
 function App() {
   const ref = useRef(null); // Create a reference for the loading bar
@@ -31,6 +35,10 @@ function App() {
           } />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/auth/google" element={<GoogleAuthHandler />} />
+          <Route path="/verify-otp" element={<VerifyOTP />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+
+
         </Routes>
       </Router>
     </AuthProvider>

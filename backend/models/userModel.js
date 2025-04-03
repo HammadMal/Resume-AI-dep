@@ -21,11 +21,14 @@ const userSchema = mongoose.Schema(
       required: [true, 'Please add a password'],
       minlength: 6,
     },
+    resetOTP: String,
+    otpExpires: Date,
   },
   {
     timestamps: true,
   }
 );
+
 
 // Encrypt password using bcrypt
 userSchema.pre('save', async function (next) {

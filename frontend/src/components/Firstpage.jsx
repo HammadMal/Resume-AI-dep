@@ -6,6 +6,8 @@ import { FaGoogle, FaApple, FaAmazon, FaFacebook, FaMicrosoft } from "react-icon
 import { SiMeta } from "react-icons/si";
 import Footer from "./footer";
 
+import transparent from "../assets/aa.png";
+
 
 
 // import Pricing from "./Pricing";
@@ -123,18 +125,21 @@ const Firstpage = () => {
         />
       </div>
 
+    
+
       {/* Overlay gradient for better text contrast */}
       <div className="fixed inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1 bg-fixed"></div>
       {/* Header/Navigation */}
-      <header className="relative z-10 py-4 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <header className="relative z-10 py-4 px-6 md:px-12 h-24">
+
+        <div className="max-w-7xl mx-auto flex justify-between items-center mt-10">
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">R</span>
+          <div>
+              <img src={transparent} alt="Logo" className="w-10 h-10" />
             </div>
             <span className="text-white font-bold text-xl">ResumeAI</span>
           </div>
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-8 mr-12">
             <a href="#features" className="text-white/80 hover:text-white transition-colors">Features</a>
             <a href="#how-it-works" className="text-white/80 hover:text-white transition-colors">How It Works</a>
             <a href="#pricing" className="text-white/80 hover:text-white transition-colors">Pricing</a>
