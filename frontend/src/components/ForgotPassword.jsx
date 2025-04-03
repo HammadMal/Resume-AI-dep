@@ -1,9 +1,17 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 import { AnimatedBackground } from 'animated-backgrounds';
+import transparent from "../assets/aa.png";
+import axios from 'axios';
+
 
 const ForgotPassword = () => {
+
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
   const navigate = useNavigate();
   const ref = useRef(null);
 
@@ -15,17 +23,35 @@ const ForgotPassword = () => {
     }, 800);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     ref.current.continuousStart();
-    // Simulate email sending process
-    setTimeout(() => {
+    setError('');
+    setSuccess('');
+  
+    console.log("Sending email:", email);  // Log the email you're sending to the backend
+  
+    try {
+      const res = await axios.post("http://localhost:5000/api/users/forgot-password", { email });
+  
+      console.log("Response from server:", res);  // Log the server response
+  
       ref.current.complete();
-      // Here you would typically show a success message
-      // For now, we'll just navigate back to login
-      navigate("/login");
-    }, 1500);
+      setSuccess("OTP sent to your email. Please check your inbox.");
+  
+      setTimeout(() => {
+        navigate("/verify-otp", { state: { email } });
+      }, 1500);
+  
+    } catch (err) {
+      console.error("Error in API call:", err); // Log the full error here
+  
+      ref.current.complete();
+      setError(err.response?.data?.message || "Something went wrong");
+    }
   };
-
+  
+  
+  
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Loading Bar */}
@@ -45,11 +71,11 @@ const ForgotPassword = () => {
       
       {/* Header/Navigation */}
       <header className="relative z-10 py-4 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div className="max-w-7xl mx-auto flex justify-between items-center mt-10">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">R</span>
-            </div>
+            <div>
+                          <img src={transparent} alt="Logo" className="w-10 h-10" />
+                        </div>
             <span className="text-white font-bold text-xl">ResumeAI</span>
           </Link>
         </div>
@@ -68,11 +94,14 @@ const ForgotPassword = () => {
               <div>
                 <label className="block text-white text-sm font-medium mb-2">Email Address</label>
                 <div className="relative">
-                  <input 
+                <input 
                     type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter your email"
                   />
+
                 </div>
               </div>
               
@@ -84,6 +113,10 @@ const ForgotPassword = () => {
                 Send Reset Link
               </button>
             </form>
+
+            {success && <p className="text-green-400 text-center mt-4">{success}</p>}
+            {error && <p className="text-red-400 text-center mt-4">{error}</p>}
+
             
             <div className="mt-6">
               <button
