@@ -15,10 +15,10 @@ The **AI-Powered Resume Checker** is a web application that leverages **Natural 
 ### Tech Stack
 | Component       | Technology  |
 |---------------|------------|
-| **Programming Language** | Python |
+| **Programming Language** | JavaScript |
 | **NLP Frameworks** | Hugging Face Transformers |
 | **ML Algorithms** | BERT, RoBERTa, TF-IDF |
-| **Backend** | Flask, Node.js |
+| **Backend** | Node.js,Express |
 | **Frontend** | React.js |
 | **File Handling** | PyPDF2, python-docx |
 | **Database** | MongoDB |
