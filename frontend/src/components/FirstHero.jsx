@@ -1,11 +1,31 @@
-import react from "react";
+import React, {useEffect} from "react";
 
 import Spotlightbox from "./Spotlightbox";
+
+import TextTransition, { presets } from 'react-text-transition';
+
+const TEXTS = [
+  "Enhance Your Resume with AI Technology",
+  "Get Your Dream Job with Artificial Intelligence",
+  "Optimize Your Resume with AI Insights",];
+
 
 
 import TestimonialCardSection from "./testemonialcard";
 
 const FirstHero = () => {
+
+  const [index, setIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    const intervalId = setInterval(
+      () => setIndex((index) => index + 1),
+      6000, // every 3 seconds
+    );
+    return () => clearTimeout(intervalId);
+  }, []);
+
+
 
     const handleGetStarted = () => {
         if (ref.current) {
@@ -43,7 +63,7 @@ const FirstHero = () => {
               </span>
               
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-                Enhance Your Resume  with AI Technology
+              <TextTransition springConfig={presets.wobbly}>{TEXTS[index % TEXTS.length]}</TextTransition>
               </h1>
               
               <p className="text-lg md:text-xl text-white/80 mb-8 max-w-lg">
