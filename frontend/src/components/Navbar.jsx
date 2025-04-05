@@ -8,7 +8,7 @@ import LoadingBar from "react-top-loading-bar";
 
 import transparent from "../assets/aa.png";
 
-import Login from "../components/Login";
+
 
 const Navbar = () => {
 
