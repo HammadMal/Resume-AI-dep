@@ -4,6 +4,8 @@ import Spotlightbox from "./Spotlightbox";
 
 import TextTransition, { presets } from 'react-text-transition';
 
+import { Typewriter } from 'react-simple-typewriter'; // ✅ CORRECT
+
 const TEXTS = [
   "Enhance Your Resume with AI Technology",
   "Get Your Dream Job with Artificial Intelligence",
@@ -63,11 +65,32 @@ const FirstHero = () => {
               </span>
               
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-              <TextTransition springConfig={presets.wobbly}>{TEXTS[index % TEXTS.length]}</TextTransition>
+              {/* <TextTransition springConfig={presets.wobbly}>{TEXTS[index % TEXTS.length]}</TextTransition> */}
+
+                  <Typewriter
+                  words={['Enhance your CV', 'Optimize with AI', 'Start for free!']}
+                  loop={true}
+                  cursor
+                  cursorStyle="|"
+                  typeSpeed={70}
+                  deleteSpeed={50}
+                  delaySpeed={1500}
+                /> 
+              
               </h1>
               
               <p className="text-lg md:text-xl text-white/80 mb-8 max-w-lg">
                 Our intelligent platform analyzes and optimizes your resume to increase your chances of landing interviews and securing your dream job.
+
+                {/* <Typewriter
+    words={['Enhance Your Resume', 'Get Your Dream Job', 'Optimize with AI']}
+    loop={true}
+    cursor
+    cursorStyle="|"
+    typeSpeed={70}
+    deleteSpeed={50}
+    delaySpeed={1500}
+  /> */}
               </p>
               
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
@@ -100,6 +123,7 @@ const FirstHero = () => {
 
           {/* <Spotlightbox /> */}
           </Spotlightbox>
+          
         
     
   );
