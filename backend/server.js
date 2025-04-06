@@ -7,6 +7,8 @@ const passport = require('passport');       // ✅ NEW
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const userRoutes = require('./routes/userRoutes');
+const analyzerRoutes = require('./routes/analyzerRoutes');
+
 
 // Load environment variables
 dotenv.config();
@@ -35,8 +37,11 @@ app.use(passport.initialize());   // ✅
 app.use(passport.session());      // ✅
 
 
+
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/analyzer', analyzerRoutes);
+
 
 // Basic route for testing
 app.get('/', (req, res) => {
