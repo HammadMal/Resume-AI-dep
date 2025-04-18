@@ -8,6 +8,8 @@ const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const userRoutes = require('./routes/userRoutes');
 const analyzerRoutes = require('./routes/analyzerRoutes');
+const fileUpload = require('express-fileupload');
+
 
 
 // Load environment variables
@@ -37,6 +39,11 @@ app.use(passport.initialize());   // ✅
 app.use(passport.session());      // ✅
 
 
+app.use(fileUpload({
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  useTempFiles: true
+}));
+
 
 // Routes
 app.use('/api/users', userRoutes);
@@ -54,6 +61,9 @@ app.get('/login', (req, res) => {
 
 // Error handler middleware
 app.use(errorHandler);
+
+
+
 
 // Start server
 const PORT = process.env.PORT || 5000;

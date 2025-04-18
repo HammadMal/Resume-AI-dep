@@ -3,9 +3,14 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatedBackground } from 'animated-backgrounds';
 import { useAuth } from "../context/AuthContext";
-import ResumeAnalysis from "./ResumeAnalysis";
-import analyzerService from "../services/analyzerService"; // You'll need to create this
+// import ResumeAnalysis from "./ResumeAnalysis";
+// import analyzerService from "../services/analyzerService"; // You'll need to create this
 import transparent from "../assets/aa.png";
+import AnalysisResults from './AnalysisResults';
+
+
+import { analyzeResume } from "../services/analyzerService";
+
 
 const Homepage = () => {
     const { user, logout } = useAuth();
@@ -27,40 +32,45 @@ const Homepage = () => {
     }, [user, navigate]);
 
     // Modify your handleFileUpload function in Homepage.jsx
-const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        setResumeFile(file);
-        
-        // For MVP, let's focus on text files
-        if (file.type === 'text/plain') {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const content = e.target.result;
-                setResumeText("This is a sample resume. I am a software developer with experience in React, Node.js, and MongoDB. I have worked on several web applications and have a strong understanding of JavaScript.");
-                console.log("Resume text loaded:", content.substring(0, 100) + "..."); // Debug log
-            };
-            reader.readAsText(file);
-        } else {
-            // For non-text files, show a message for now
-            console.log("File type:", file.type);
-            alert("For this MVP, please use a text (.txt) file. PDF and DOC support coming soon!");
+    const handleFileUpload = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            // Check file type
+            if (!['application/pdf', 'text/plain'].includes(file.type)) {
+                setError("Please upload a PDF or TXT file only");
+                return;
+            }
+
+            setResumeFile(file);
+            
+            // For text files, extract content
+            if (file.type === 'text/plain') {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    setResumeText(e.target.result);
+                };
+                reader.onerror = () => {
+                    setError("Failed to read file content");
+                };
+                reader.readAsText(file);
+            } else {
+                // For PDF files, we'll let the backend handle extraction
+                setResumeText("");
+            }
         }
-    }
-};
+    };
 
     const triggerFileInput = () => {
         fileInputRef.current.click();
     };
 
     const handleAnalyzeResume = async () => {
-        // Check if we have necessary data
-        if (!resumeText && !resumeFile) {
+        if (!resumeFile) {
             setError("Please upload a resume first");
             return;
         }
         
-        if (!jobDescription) {
+        if (!jobDescription.trim()) {
             setError("Please enter a job description");
             return;
         }
@@ -69,21 +79,19 @@ const handleFileUpload = (event) => {
         setAnalyzing(true);
         
         try {
-            // For MVP, only analyze text files directly
-            // For PDF/DOC, we would need server-side extraction first
-            const results = await analyzerService.analyzeResume(resumeText, jobDescription);
+            const formData = new FormData();
+            formData.append('resume', resumeFile);
+            formData.append('jobDescription', jobDescription);
+    
+            const results = await analyzeResume(formData);
             setAnalysisResults(results);
         } catch (err) {
-            console.error(err);
-            setError("Failed to analyze resume. Please try again.");
+            console.error('Analysis error:', err);
+            setError(err.message || "Failed to analyze resume. Please try again.");
         } finally {
             setAnalyzing(false);
         }
     };
-
-    if (!user) {
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
-    }
 
     return (
         <div className="min-h-screen relative">
@@ -220,8 +228,8 @@ const handleFileUpload = (event) => {
                     </div>
                     
                     {/* Analysis Results */}
-                    {analysisResults && (
-                        <ResumeAnalysis results={analysisResults} />
+                                    {analysisResults && (
+                        <AnalysisResults results={analysisResults} />
                     )}
                 </div>
             </main>
