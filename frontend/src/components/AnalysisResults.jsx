@@ -3,7 +3,7 @@ import React from 'react';
 const AnalysisResults = ({ results }) => {
   if (!results) return null;
 
-  const { grammar_analysis, ats_analysis, suggestions } = results;
+  const { grammar_analysis, ats_analysis, suggestions, remaining_analyses } = results;
 
   // Helper function to check if a section has valid data
   const hasData = (section) => {
@@ -20,6 +20,16 @@ const AnalysisResults = ({ results }) => {
 
   return (
     <div className="mt-8 space-y-6">
+      {/* Remaining Analyses Counter */}
+      <div className="bg-blue-500/10 backdrop-blur-md rounded-lg p-4 flex justify-between items-center">
+        <span className="text-white font-medium">
+          Remaining analyses today:
+        </span>
+        <span className="text-blue-400 font-bold">
+          {remaining_analyses} / 5
+        </span>
+      </div>
+
       {/* Grammar Analysis Section */}
       <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
         <h2 className="text-xl font-semibold text-white mb-4">Grammar Analysis</h2>

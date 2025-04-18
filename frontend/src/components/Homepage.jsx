@@ -87,7 +87,11 @@ const Homepage = () => {
             setAnalysisResults(results);
         } catch (err) {
             console.error('Analysis error:', err);
-            setError(err.message || "Failed to analyze resume. Please try again.");
+            if (err.response?.status === 429) {
+                setError("You have reached your daily limit of 5 analyses. Please try again tomorrow.");
+            } else {
+                setError(err.message || "Failed to analyze resume. Please try again.");
+            }
         } finally {
             setAnalyzing(false);
         }

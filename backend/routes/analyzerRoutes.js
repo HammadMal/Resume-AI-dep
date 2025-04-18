@@ -1,8 +1,9 @@
 const express = require('express');
-const { analyzeResumeText, analyzeResume } = require('../controllers/analyzerController');
+const { analyzeResume } = require('../controllers/analyzerController');
 const { protect } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-router.post('/analyze', analyzeResume);
+// Add protect middleware to ensure user is authenticated
+router.post('/analyze', protect, analyzeResume);
 
 module.exports = router;

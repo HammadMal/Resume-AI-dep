@@ -4,6 +4,13 @@ const API_URL = 'http://localhost:5000/api/analyzer/';
 
 const analyzeResume = async (formData) => {
     try {
+        // Change from token to userToken to match auth service
+        const token = localStorage.getItem('userToken');
+        
+        if (!token) {
+            throw new Error('Not authorized. Please login again.');
+        }
+
         // Convert file to base64
         const file = formData.get('resume');
         const jobDescription = formData.get('jobDescription');
@@ -15,7 +22,6 @@ const analyzeResume = async (formData) => {
         const reader = new FileReader();
         const fileContentPromise = new Promise((resolve, reject) => {
             reader.onload = () => {
-                // Get base64 content without data URL prefix
                 const base64Content = reader.result.split(',')[1];
                 resolve(base64Content);
             };
@@ -33,12 +39,19 @@ const analyzeResume = async (formData) => {
         const response = await axios.post(API_URL + 'analyze', requestData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
             },
         });
 
         return response.data;
     } catch (error) {
         console.error('Server error:', error.response?.data || error.message);
+        if (error.response?.status === 401) {
+            // Handle unauthorized error
+            localStorage.removeItem('userToken'); // Clear invalid token
+            window.location.href = '/login'; // Redirect to login
+            throw new Error('Session expired. Please login again.');
+        }
         throw new Error(
             error.response?.data?.message || 
             'Failed to analyze resume. Please try again.'
