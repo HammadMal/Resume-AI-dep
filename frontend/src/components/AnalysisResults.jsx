@@ -1,137 +1,113 @@
 import React from 'react';
 
 const AnalysisResults = ({ results }) => {
-  if (!results) return null;
+    if (!results) return null;
+    const { grammar_analysis, ats_analysis, suggestions, remaining_analyses } = results;
 
-  const { grammar_analysis, ats_analysis, suggestions, remaining_analyses } = results;
-
-  // Helper function to check if a section has valid data
-  const hasData = (section) => {
-    return section && Object.keys(section).length > 0 && !section.error;
-  };
-
-  // Helper function to render arrays with fallback
-  const renderArray = (arr, fallback = "None found") => {
-    if (!Array.isArray(arr) || arr.length === 0) return fallback;
-    return arr.map((item, index) => (
-      <li key={index} className="text-white/80">{item}</li>
-    ));
-  };
-
-  return (
-    <div className="mt-8 space-y-6">
-      {/* Remaining Analyses Counter */}
-      <div className="bg-blue-500/10 backdrop-blur-md rounded-lg p-4 flex justify-between items-center">
-        <span className="text-white font-medium">
-          Remaining analyses today:
-        </span>
-        <span className="text-blue-400 font-bold">
-          {remaining_analyses} / 5
-        </span>
-      </div>
-
-      {/* Grammar Analysis Section */}
-      <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-white mb-4">Grammar Analysis</h2>
-        {hasData(grammar_analysis) ? (
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <div className="text-4xl font-bold text-blue-400">
-                {grammar_analysis.score}/100
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-medium text-white mb-2">Found Issues:</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  {renderArray(grammar_analysis.errors)}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-white mb-2">Suggestions:</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  {renderArray(grammar_analysis.suggestions)}
-                </ul>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <p className="text-white/60">Unable to perform grammar analysis</p>
-        )}
-      </div>
-
-      {/* ATS Analysis Section */}
-      <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-white mb-4">ATS Compatibility</h2>
-        {hasData(ats_analysis) ? (
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <div className="text-4xl font-bold text-blue-400">
-                {ats_analysis.score}/100
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h3 className="text-lg font-medium text-white mb-2">Matching Keywords:</h3>
-                <div className="flex flex-wrap gap-2">
-                  {ats_analysis.matching_keywords?.map((keyword, index) => (
-                    <span key={index} className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-sm">
-                      {keyword}
-                    </span>
-                  )) || <span className="text-white/60">No matching keywords found</span>}
+    return (
+        <div className="mt-8 space-y-8">
+            {/* Analysis Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-md rounded-xl p-6">
+                    <div className="text-white/70 mb-2">Daily Analyses Remaining</div>
+                    <div className="text-3xl font-bold text-white">{remaining_analyses} / 5</div>
                 </div>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-white mb-2">Missing Keywords:</h3>
-                <div className="flex flex-wrap gap-2">
-                  {ats_analysis.missing_keywords?.map((keyword, index) => (
-                    <span key={index} className="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-sm">
-                      {keyword}
-                    </span>
-                  )) || <span className="text-white/60">No missing keywords found</span>}
+                <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 backdrop-blur-md rounded-xl p-6">
+                    <div className="text-white/70 mb-2">Grammar Score</div>
+                    <div className="text-3xl font-bold text-white">{grammar_analysis?.score || 0}/100</div>
                 </div>
-              </div>
+                <div className="bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 backdrop-blur-md rounded-xl p-6">
+                    <div className="text-white/70 mb-2">ATS Score</div>
+                    <div className="text-3xl font-bold text-white">{ats_analysis?.score || 0}/100</div>
+                </div>
             </div>
-          </div>
-        ) : (
-          <p className="text-white/60">Unable to perform ATS analysis</p>
-        )}
-      </div>
 
-      {/* Suggestions Section */}
-      <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-white mb-4">Improvement Suggestions</h2>
-        {hasData(suggestions) ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-medium text-white mb-2">Content Improvements:</h3>
-              <ul className="list-disc pl-5 space-y-1">
-                {renderArray(suggestions.content_improvements)}
-              </ul>
+            {/* ATS Analysis */}
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 space-y-6">
+                <h2 className="text-xl font-semibold text-white">ATS Analysis</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 className="text-sm font-medium text-white/70 mb-3">Matching Keywords</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {ats_analysis?.matching_keywords?.map((keyword, index) => (
+                                <span key={index} className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
+                                    {keyword}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-medium text-white/70 mb-3">Missing Keywords</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {ats_analysis?.missing_keywords?.map((keyword, index) => (
+                                <span key={index} className="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-sm">
+                                    {keyword}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-              <h3 className="text-lg font-medium text-white mb-2">Format Improvements:</h3>
-              <ul className="list-disc pl-5 space-y-1">
-                {renderArray(suggestions.format_improvements)}
-              </ul>
+
+            {/* Grammar Analysis */}
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 space-y-6">
+                <h2 className="text-xl font-semibold text-white">Grammar Analysis</h2>
+                <div className="space-y-4">
+                    {grammar_analysis?.errors?.map((error, index) => (
+                        <div key={index} className="flex items-start space-x-3 text-white/80">
+                            <svg className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                            <span>{error}</span>
+                        </div>
+                    ))}
+                </div>
             </div>
-            <div className="md:col-span-2">
-              <h3 className="text-lg font-medium text-white mb-2">Skills to Highlight:</h3>
-              <div className="flex flex-wrap gap-2">
-                {suggestions.skills_to_highlight?.map((skill, index) => (
-                  <span key={index} className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full text-sm">
-                    {skill}
-                  </span>
-                )) || <span className="text-white/60">No specific skills to highlight</span>}
-              </div>
+
+            {/* Improvement Suggestions */}
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 space-y-6">
+                <h2 className="text-xl font-semibold text-white">Improvement Suggestions</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 className="text-sm font-medium text-white/70 mb-3">Content Improvements</h3>
+                        <ul className="space-y-3">
+                            {suggestions?.content_improvements?.map((item, index) => (
+                                <li key={index} className="flex items-start space-x-3">
+                                    <svg className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                    <span className="text-white/80">{item}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-medium text-white/70 mb-3">Format Improvements</h3>
+                        <ul className="space-y-3">
+                            {suggestions?.format_improvements?.map((item, index) => (
+                                <li key={index} className="flex items-start space-x-3">
+                                    <svg className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                    <span className="text-white/80">{item}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+                <div className="mt-6">
+                    <h3 className="text-sm font-medium text-white/70 mb-3">Skills to Highlight</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {suggestions?.skills_to_highlight?.map((skill, index) => (
+                            <span key={index} className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm">
+                                {skill}
+                            </span>
+                        ))}
+                    </div>
+                </div>
             </div>
-          </div>
-        ) : (
-          <p className="text-white/60">Unable to generate improvement suggestions</p>
-        )}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default AnalysisResults;

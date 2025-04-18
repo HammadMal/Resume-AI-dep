@@ -134,107 +134,103 @@ const Homepage = () => {
                 </div>
             </header>
 
-            {/* Main content */}
             <main className="relative z-10 container mx-auto px-6 py-12">
                 <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 shadow-xl max-w-4xl mx-auto">
-                    <h1 className="text-3xl font-bold text-white mb-6">Dashboard</h1>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div className="bg-white/10 rounded-lg p-6">
-                            <h2 className="text-xl font-semibold text-white mb-3">Profile Information</h2>
-                            <div className="space-y-3">
-                                <div>
-                                    <span className="text-white/70">Name:</span>
-                                    <span className="text-white ml-2">{user.name}</span>
-                                </div>
-                                <div>
-                                    <span className="text-white/70">Email:</span>
-                                    <span className="text-white ml-2">{user.email}</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="bg-white/10 rounded-lg p-6">
-                            <h2 className="text-xl font-semibold text-white mb-3">Quick Actions</h2>
-                            <div className="space-y-3">
-                                <input 
-                                    type="file" 
-                                    ref={fileInputRef}
-                                    onChange={handleFileUpload}
-                                    accept=".pdf,.doc,.docx,.txt"
-                                    className="hidden"
-                                />
-                                <button 
-                                    onClick={triggerFileInput}
-                                    className="w-full bg-blue-600/80 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors"
-                                >
-                                    Upload Resume
-                                </button>
-                                <button className="w-full bg-purple-600/80 hover:bg-purple-700 text-white py-2 rounded-lg transition-colors">
-                                    Create New Resume
-                                </button>
+                    <div className="flex items-center justify-between mb-8">
+                        <h1 className="text-3xl font-bold text-white">Resume Analysis</h1>
+                        <div className="flex items-center space-x-4 bg-white/10 rounded-lg p-3">
+                            <div className="text-white/70">
+                                <span className="font-medium text-white">{user.name}</span>
+                                <div className="text-sm">{user.email}</div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div className="bg-white/10 rounded-lg p-6 mb-6">
-                        <h2 className="text-xl font-semibold text-white mb-4">Resume Analysis</h2>
+
+                    <div className="bg-white/10 rounded-lg p-8">
                         {resumeFile ? (
-                            <div>
-                                <p className="text-white/80 mb-4">
-                                    Resume uploaded: {resumeFile.name}
-                                </p>
-                                
-                                <div className="mb-4">
+                            <div className="space-y-6">
+                                <div className="flex items-center space-x-4">
+                                    <div className="flex-1 bg-white/10 rounded-lg p-4">
+                                        <div className="text-white/70 text-sm mb-1">Current Resume</div>
+                                        <div className="text-white font-medium">{resumeFile.name}</div>
+                                    </div>
+                                    <button 
+                                        onClick={triggerFileInput}
+                                        className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 px-4 py-2 rounded-lg transition-all"
+                                    >
+                                        Change File
+                                    </button>
+                                </div>
+
+                                <div>
                                     <label className="block text-white text-sm font-medium mb-2">
-                                        Job Description:
+                                        Job Description
                                     </label>
                                     <textarea
                                         value={jobDescription}
                                         onChange={(e) => setJobDescription(e.target.value)}
-                                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent h-28"
+                                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32"
                                         placeholder="Paste the job description here to match against your resume..."
                                     />
                                 </div>
-                                
+
                                 {error && (
-                                    <div className="bg-red-500/20 border border-red-500/50 text-white p-3 rounded-lg mb-4">
+                                    <div className="bg-red-500/20 border border-red-500/50 text-white p-4 rounded-lg">
                                         {error}
                                     </div>
                                 )}
-                                
-                                <div className="flex justify-center">
+
+                                <div className="flex justify-center pt-4">
                                     <button 
                                         onClick={handleAnalyzeResume}
                                         disabled={analyzing}
-                                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-8 rounded-xl shadow-lg transition-all disabled:opacity-70"
+                                        className="relative inline-flex items-center px-8 py-3 overflow-hidden text-lg font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl hover:from-blue-600 hover:to-purple-700 disabled:opacity-70 transition-all duration-300 transform hover:scale-[1.02] focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black"
                                     >
-                                        {analyzing ? 'Analyzing...' : 'Analyze Resume'}
+                                        {analyzing ? (
+                                            <>
+                                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                Analyzing Resume...
+                                            </>
+                                        ) : (
+                                            'Analyze Resume'
+                                        )}
                                     </button>
                                 </div>
                             </div>
                         ) : (
-                            <>
-                                <p className="text-white/80 mb-6">
-                                    You haven't uploaded any resumes yet. Get started by uploading your resume to receive AI-powered analysis and suggestions.
-                                </p>
-                                
-                                <div className="flex justify-center">
-                                    <button 
-                                        onClick={triggerFileInput}
-                                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-8 rounded-xl shadow-lg transition-all"
-                                    >
-                                        Upload Your First Resume
-                                    </button>
+                            <div className="text-center py-12">
+                                <input 
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileUpload}
+                                    accept=".pdf,.txt"
+                                    className="hidden"
+                                />
+                                <div className="mb-6">
+                                    <div className="text-white text-xl font-medium mb-2">
+                                        Upload Your Resume
+                                    </div>
+                                    <p className="text-white/60">
+                                        Upload your resume to get AI-powered analysis and improvement suggestions
+                                    </p>
                                 </div>
-                            </>
+                                <button 
+                                    onClick={triggerFileInput}
+                                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black"
+                                >
+                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    Upload Resume
+                                </button>
+                            </div>
                         )}
                     </div>
-                    
-                    {/* Analysis Results */}
-                                    {analysisResults && (
-                        <AnalysisResults results={analysisResults} />
-                    )}
+
+                    {analysisResults && <AnalysisResults results={analysisResults} />}
                 </div>
             </main>
         </div>
