@@ -1,5 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
+import { Link,Routes,Route } from "react-router-dom";
+
+import ContactUs from "./contactus";
 
 import transparent from "../assets/aa.png";
 
@@ -85,7 +88,7 @@ const Footer = () => {
                 <a href="#" className="text-white/60 hover:text-white text-sm transition-colors">Privacy Policy</a>
               </li>
               <li>
-                <a href="#" className="text-white/60 hover:text-white text-sm transition-colors">Contact Us</a>
+                <Link to ="contactus" className="text-white/60 hover:text-white text-sm transition-colors">Contact Us</Link>
               </li>
 
               <li>
