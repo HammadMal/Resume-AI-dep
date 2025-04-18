@@ -106,10 +106,27 @@ const FirstHero = () => {
               </div>              
               <div className="flex items-center space-x-4">
                 <div className="flex -space-x-2">
-                  <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">TK</div>
-                  <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs">MJ</div>
-                  <div className="w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center text-white text-xs">BP</div>
-                  <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs">SR</div>
+                  <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
+
+                  <img src = "https://cdn.builder.io/api/v1/image/assets/TEMP/1aa484b096efd982c17829a912d74329ab81001c4ad1da0197618eb5ae4719c7?apiKey=5b7d47d822c447fbbf3f0faf7f51790e&" className="w-full h-full object-cover rounded-full" ></img>
+                  
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs">
+                  <img src = "https://cdn.builder.io/api/v1/image/assets/TEMP/a526d51b880f5455948aec3ff5cb0fca1f4b09c016232f7e8057df97104641dd?apiKey=5b7d47d822c447fbbf3f0faf7f51790e&" className="w-full h-full object-cover rounded-full" ></img>
+
+
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center text-white text-xs">
+
+
+                  <img src = "https://cdn.builder.io/api/v1/image/assets/TEMP/0ba683f74943142ccaf0fc039abf04fa47637ba466b6819719847d5b3f76f6c6?apiKey=5b7d47d822c447fbbf3f0faf7f51790e&" className="w-full h-full object-cover rounded-full" ></img>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs">
+
+
+
+                  <img src = "https://cdn.builder.io/api/v1/image/assets/TEMP/191cd4946c126fb603bd2d235c4bc8a50a15ec56b5b874a6d432d90205f4f936?apiKey=5b7d47d822c447fbbf3f0faf7f51790e&" className="w-full h-full object-cover rounded-full" ></img>
+                  </div>
                 </div>
                 <div className="text-white">
                   <span className="font-bold">10,000+</span> satisfied users

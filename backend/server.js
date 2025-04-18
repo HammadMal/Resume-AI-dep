@@ -7,6 +7,10 @@ const passport = require('passport');       // ✅ NEW
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const userRoutes = require('./routes/userRoutes');
+const analyzerRoutes = require('./routes/analyzerRoutes');
+const fileUpload = require('express-fileupload');
+
+
 
 // Load environment variables
 dotenv.config();
@@ -35,8 +39,16 @@ app.use(passport.initialize());   // ✅
 app.use(passport.session());      // ✅
 
 
+app.use(fileUpload({
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  useTempFiles: true
+}));
+
+
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/analyzer', analyzerRoutes);
+
 
 // Basic route for testing
 app.get('/', (req, res) => {
@@ -50,8 +62,13 @@ app.get('/login', (req, res) => {
 // Error handler middleware
 app.use(errorHandler);
 
+
+
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
+
+//comment

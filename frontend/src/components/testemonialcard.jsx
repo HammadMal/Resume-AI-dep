@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 
+import elon from "../assets/elon.png";
+
 const TestimonialCardSection = () => {
   const ref = useRef(null);
   const navigate = useNavigate();
@@ -68,7 +70,7 @@ const TestimonialCardSection = () => {
             
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white text-xs">
-                EM
+                <img src ={elon} alt="User" className="w-full h-full rounded-full object-cover" />
               </div>
               <div>
                 <h4 className="text-white font-medium">Elon Musk</h4>

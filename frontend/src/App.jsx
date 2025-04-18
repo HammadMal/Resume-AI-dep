@@ -14,6 +14,13 @@ import VerifyOTP from "./components/VerifyOTP";
 
 import ResetPassword from "./components/ResetPassword";
 
+import ContactUs from "./components/contactus";
+
+import PricingPage from "./components/pricingpage";
+
+
+import AboutUs  from "./components/AboutUs";
+
 
 function App() {
   const ref = useRef(null); // Create a reference for the loading bar
@@ -37,6 +44,12 @@ function App() {
           <Route path="/auth/google" element={<GoogleAuthHandler />} />
           <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+
+          <Route path ="/contactus" element={<ContactUs />} />
+
+          <Route path="/pricingpage" element={<PricingPage />} />
+
+          <Route path="/aboutus" element={<AboutUs />} />
 
 
         </Routes>
