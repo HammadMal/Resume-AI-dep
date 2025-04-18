@@ -22,7 +22,7 @@ const PricingSection = () => {
     {
       name: "Premium",
       desc: "Perfect for larger companies or agencies with extensive hiring needs.",
-      price: 32,
+      price: 10,
       isMostPop: true,
       features: [
         "Advanced AI-powered resume analysis",

@@ -19,6 +19,9 @@ import ContactUs from "./components/contactus";
 import PricingPage from "./components/pricingpage";
 
 
+import AboutUs  from "./components/AboutUs";
+
+
 function App() {
   const ref = useRef(null); // Create a reference for the loading bar
   // useGoogleRedirect();
@@ -45,6 +48,8 @@ function App() {
           <Route path ="/contactus" element={<ContactUs />} />
 
           <Route path="/pricingpage" element={<PricingPage />} />
+
+          <Route path="/aboutus" element={<AboutUs />} />
 
 
         </Routes>

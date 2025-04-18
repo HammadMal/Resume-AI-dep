@@ -15,7 +15,7 @@ import MarqueeDemo from "./reviews";
 
 import Pricing from "./pricing";
 
-
+  
 const Firstpage = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
