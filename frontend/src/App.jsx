@@ -16,6 +16,8 @@ import ResetPassword from "./components/ResetPassword";
 
 import ContactUs from "./components/contactus";
 
+import PricingPage from "./components/pricingpage";
+
 
 function App() {
   const ref = useRef(null); // Create a reference for the loading bar
@@ -41,6 +43,8 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route path ="/contactus" element={<ContactUs />} />
+
+          <Route path="/pricingpage" element={<PricingPage />} />
 
 
         </Routes>

@@ -1,10 +1,26 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+import PricingPage from "./pricingpage";
+import { useNavigate } from "react-router-dom";
+
+
+
 const PricingSection = () => {
+
+  
+  const navigate = useNavigate(); 
+
+
+  const handleonclick = () => { 
+
+    navigate("/pricingpage");
+  };    
+
+
   const plans = [
     {
-      name: "Enterprise",
+      name: "Premium",
       desc: "Perfect for larger companies or agencies with extensive hiring needs.",
       price: 32,
       isMostPop: true,
@@ -19,13 +35,13 @@ const PricingSection = () => {
       ],
     },
     {
-      name: "Startup",
+      name: "Free Personal Plan",
       desc: "Ideal for individuals or small teams focused on optimizing their job search.",
-      price: 12,
+      price: 0,
       isMostPop: false,
       features: [
         "AI-powered resume analysis",
-        "10 resume optimizations/month",
+        "5 resume optimizations/day",
         "Job description matching",
         "ATS compatibility checker",
         "Email support",
@@ -91,15 +107,18 @@ const PricingSection = () => {
                   <span className="text-lg text-white/70 font-normal ml-1">/mo</span>
                 </div>
                 <p className="text-white/70">{item.desc}</p>
-                <button
-                  className={`w-full py-3 rounded-xl font-semibold text-white transition-all ${
-                    item.isMostPop
-                      ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg"
-                      : "bg-white/10 hover:bg-white/20"
-                  }`}
-                >
-                  Get Started
-                </button>
+                {item.name !== "Free Personal Plan" && (
+                  <button
+                    onClick={handleonclick}
+                    className={`w-full py-3 rounded-xl font-semibold text-white transition-all ${
+                      item.isMostPop
+                        ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg"
+                        : "bg-white/10 hover:bg-white/20"
+                    }`}
+                  >
+                    Get Started
+                  </button>
+                )}
               </div>
 
               <div className="p-8 space-y-4">
