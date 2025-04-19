@@ -59,4 +59,44 @@ const analyzeResume = async (formData) => {
     }
 };
 
-export { analyzeResume };
+const downloadReport = async (analysisResults) => {
+    try {
+        const token = localStorage.getItem('userToken'); // Changed from 'token' to 'userToken'
+        
+        if (!token) {
+            throw new Error('Not authorized. Please login again.');
+        }
+
+        const response = await axios({
+            url: `${API_URL}generate-report`,
+            method: 'POST',
+            data: { analysisResults },
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            responseType: 'blob'
+        });
+
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `resume-analysis-${new Date().toISOString().split('T')[0]}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+
+    } catch (error) {
+        if (error.response?.status === 401) {
+            // Handle unauthorized error
+            localStorage.removeItem('userToken');
+            window.location.href = '/login';
+            throw new Error('Session expired. Please login again.');
+        }
+        throw new Error('Failed to download report. Please try again.');
+    }
+};
+
+export { analyzeResume, downloadReport };
