@@ -17,10 +17,36 @@ const Homepage = () => {
     const fileInputRef = useRef(null);
     const [resumeFile, setResumeFile] = useState(null);
     const [resumeText, setResumeText] = useState("");
-    const [jobDescription, setJobDescription] = useState("");
-    const [analysisResults, setAnalysisResults] = useState(null);
+    const [jobDescription, setJobDescription] = useState(() => {
+        // Initialize from localStorage
+        return localStorage.getItem('jobDescription') || "";
+    });
+    const [analysisResults, setAnalysisResults] = useState(() => {
+        // Initialize from localStorage
+        const savedResults = localStorage.getItem('analysisResults');
+        return savedResults ? JSON.parse(savedResults) : null;
+    });
     const [analyzing, setAnalyzing] = useState(false);
     const [error, setError] = useState("");
+
+    // Save results to localStorage whenever they change
+    useEffect(() => {
+        if (analysisResults) {
+            localStorage.setItem('analysisResults', JSON.stringify(analysisResults));
+        }
+    }, [analysisResults]);
+
+    // Save job description to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem('jobDescription', jobDescription);
+    }, [jobDescription]);
+
+    // Clear localStorage when user logs out
+    const handleLogout = () => {
+        localStorage.removeItem('analysisResults');
+        localStorage.removeItem('jobDescription');
+        logout();
+    };
 
     const navigate = useNavigate();
 
@@ -61,7 +87,9 @@ const Homepage = () => {
     };
 
     const triggerFileInput = () => {
-        fileInputRef.current.click();
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
     };
 
     const handleAnalyzeResume = async () => {
@@ -125,7 +153,7 @@ const Homepage = () => {
                             Welcome, {user.name}
                         </div>
                         <button 
-                            onClick={() => logout()}
+                            onClick={handleLogout}
                             className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all duration-300"
                         >
                             Logout
@@ -161,6 +189,14 @@ const Homepage = () => {
                                         Change File
                                     </button>
                                 </div>
+
+                                <input 
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileUpload}
+                                    accept=".pdf,.txt"
+                                    className="hidden"
+                                />
 
                                 <div>
                                     <label className="block text-white text-sm font-medium mb-2">
