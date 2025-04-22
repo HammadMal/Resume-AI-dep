@@ -5,6 +5,10 @@ import { AnimatedBackground } from 'animated-backgrounds';
 import { useAuth } from "../context/AuthContext";
 import transparent from "../assets/aa.png";
 import AnalysisResults from './AnalysisResults';
+import { Document, Page, pdfjs } from 'react-pdf';
+
+// Set the worker source locally
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 import { analyzeResume, downloadReport } from '../services/analyzerService';
 import { toast } from 'react-hot-toast';
@@ -12,6 +16,9 @@ import { toast } from 'react-hot-toast';
 const Homepage = () => {
     const { user, logout } = useAuth();
     const fileInputRef = useRef(null);
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pdfUrl, setPdfUrl] = useState(null);
     const [resumeFile, setResumeFile] = useState(null);
     const [resumeText, setResumeText] = useState("");
     const [jobDescription, setJobDescription] = useState(() => {
@@ -55,6 +62,15 @@ const Homepage = () => {
         }
     }, [user, navigate]);
 
+    useEffect(() => {
+        return () => {
+            // Cleanup PDF URL when component unmounts
+            if (pdfUrl) {
+                URL.revokeObjectURL(pdfUrl);
+            }
+        };
+    }, [pdfUrl]);
+
     const handleFileUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -63,8 +79,16 @@ const Homepage = () => {
                 setError("Please upload a PDF or TXT file only");
                 return;
             }
-
+            
             setResumeFile(file);
+            
+            // Create URL for PDF preview
+            if (file.type === 'application/pdf') {
+                const fileUrl = URL.createObjectURL(file);
+                setPdfUrl(fileUrl);
+            } else {
+                setPdfUrl(null);
+            }
             
             // For text files, extract content
             if (file.type === 'text/plain') {
@@ -94,20 +118,16 @@ const Homepage = () => {
             setError("Please upload a resume first");
             return;
         }
-        
         if (!jobDescription.trim()) {
             setError("Please enter a job description");
             return;
         }
-        
         setError("");
         setAnalyzing(true);
-        
         try {
             const formData = new FormData();
             formData.append('resume', resumeFile);
             formData.append('jobDescription', jobDescription);
-    
             const results = await analyzeResume(formData);
             setAnalysisResults(results);
         } catch (err) {
@@ -124,7 +144,6 @@ const Homepage = () => {
 
     const handleDownloadReport = async () => {
         if (!analysisResults) return;
-        
         try {
             setDownloading(true);
             await downloadReport(analysisResults);
@@ -146,23 +165,19 @@ const Homepage = () => {
                     style={{ opacity: 1 }} 
                 />
             </div>
-
             {/* Gradient overlay */}
             <div className="fixed inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1 bg-fixed"></div>
-             
             {/* Glass pattern overlay */}
             <div className="fixed inset-0 bg-gradient-radial from-white/5 to-transparent bg-[length:20px_20px] opacity-10 z-1"></div>
-            
             {/* Header/Navigation */}
             <header className="relative z-10 py-4 px-6 md:px-12">
                 <div className="max-w-7xl mx-auto flex justify-between items-center mt-10">
                     <div className="flex items-center space-x-2">
-                        <div className="flex items-center justify-center"> 
+                        <div className="flex items-center justify-center">
                             <img src={transparent} alt="Logo" className="w-10 h-10" />
                         </div>
                         <span className="text-white font-bold text-xl">ResumeAI</span>
                     </div>
-                    
                     <div className="flex items-center space-x-6">
                         <div className="text-white font-medium hidden md:block">
                             <span className="text-white/70 mr-2">Welcome,</span>
@@ -180,7 +195,6 @@ const Homepage = () => {
                     </div>
                 </div>
             </header>
-
             <main className="relative z-10 container mx-auto px-4 py-12 pb-24">
                 <div className="max-w-5xl mx-auto">
                     {/* Main card with glass effect */}
@@ -202,12 +216,11 @@ const Homepage = () => {
                                 </div>
                             </div>
                         </div>
-                        
                         {/* Card body */}
                         <div className="p-8">
                             {resumeFile ? (
                                 <div className="space-y-8">
-                                    {/* Resume file info */}
+                                    {/* Resume file info and Change File button */}
                                     <div className="flex flex-col md:flex-row md:items-center md:space-x-4">
                                         <div className="flex-1 bg-white/5 rounded-lg p-5 border border-white/10 mb-4 md:mb-0">
                                             <div className="flex items-center">
@@ -233,6 +246,54 @@ const Homepage = () => {
                                         </button>
                                     </div>
 
+                                    {/* Move PDF Preview here - right after the Change File button */}
+                                    {resumeFile.type === 'application/pdf' && (
+                                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                            <div className="flex justify-between items-center mb-4">
+                                                <h3 className="text-white font-medium">PDF Preview</h3>
+                                                <div className="flex items-center space-x-2">
+                                                    <button 
+                                                        onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
+                                                        disabled={pageNumber <= 1}
+                                                        className="p-2 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 text-white"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                        </svg>
+                                                    </button>
+                                                    <span className="text-white/70">
+                                                        Page {pageNumber} of {numPages}
+                                                    </span>
+                                                    <button 
+                                                        onClick={() => setPageNumber(Math.min(numPages, pageNumber + 1))}
+                                                        disabled={pageNumber >= numPages}
+                                                        className="p-2 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 text-white"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-center bg-white/5 rounded-lg p-4">
+                                                <Document
+                                                    file={pdfUrl}
+                                                    onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+                                                    onLoadError={(error) => setError("Error loading PDF")}
+                                                    className="max-w-full"
+                                                >
+                                                    <Page
+                                                        pageNumber={pageNumber}
+                                                        renderTextLayer={false}
+                                                        renderAnnotationLayer={false}
+                                                        className="max-w-full"
+                                                        scale={1.2}
+                                                    />
+                                                </Document>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <input 
                                         type="file"
                                         ref={fileInputRef}
@@ -245,7 +306,7 @@ const Homepage = () => {
                                     <div>
                                         <label className="block text-white text-sm font-medium mb-3 flex items-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                             </svg>
                                             Job Description
                                         </label>
@@ -263,7 +324,6 @@ const Homepage = () => {
                                             )}
                                         </div>
                                     </div>
-
                                     {/* Error message */}
                                     {error && (
                                         <div className="bg-red-500/10 border border-red-500/30 text-white p-4 rounded-lg flex items-start">
@@ -273,7 +333,6 @@ const Homepage = () => {
                                             <span>{error}</span>
                                         </div>
                                     )}
-
                                     {/* Analyze button */}
                                     <div className="flex justify-center pt-4">
                                         <button 
@@ -309,7 +368,6 @@ const Homepage = () => {
                                         accept=".pdf,.txt"
                                         className="hidden"
                                     />
-                                    
                                     {/* File upload illustration */}
                                     <div className="mb-8 flex justify-center">
                                         <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
@@ -318,7 +376,6 @@ const Homepage = () => {
                                             </svg>
                                         </div>
                                     </div>
-                                    
                                     <div className="mb-8">
                                         <div className="text-white text-2xl font-medium mb-3">
                                             Upload Your Resume
@@ -327,7 +384,6 @@ const Homepage = () => {
                                             Upload your resume to get AI-powered analysis and improvement suggestions tailored to your target job
                                         </p>
                                     </div>
-                                    
                                     <button 
                                         onClick={triggerFileInput}
                                         className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg shadow-purple-600/20"
@@ -337,7 +393,6 @@ const Homepage = () => {
                                         </svg>
                                         Upload Resume
                                     </button>
-                                    
                                     {/* Supported formats */}
                                     <div className="mt-6 text-white/50 text-sm flex justify-center items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -349,7 +404,6 @@ const Homepage = () => {
                             )}
                         </div>
                     </div>
-
                     {/* Analysis Results Section */}
                     {analysisResults && (
                         <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl overflow-hidden mb-8">
@@ -363,10 +417,9 @@ const Homepage = () => {
                             </div>
                             <div className="p-8">
                                 <AnalysisResults results={analysisResults} />
-                                
                                 {/* Download button */}
                                 <div className="mt-8 flex justify-end">
-                                    <button
+                                    <button 
                                         onClick={handleDownloadReport}
                                         disabled={downloading}
                                         className="flex items-center space-x-2 bg-gradient-to-r from-emerald-600/70 to-green-600/70 hover:from-emerald-600/90 hover:to-green-600/90
@@ -388,7 +441,6 @@ const Homepage = () => {
                             </div>
                         </div>
                     )}
-                    
                     {/* Footer */}
                     <div className="text-center text-white/40 text-sm py-6">
                         <p>© {new Date().getFullYear()} ResumeAI. All rights reserved.</p>
