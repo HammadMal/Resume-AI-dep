@@ -12,6 +12,9 @@ const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const MAX_ATTEMPTS = 5;
+const LOCK_TIME = 5 * 60 * 1000; // 5 minutes
+
 
 
 
@@ -64,19 +67,59 @@ const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   // Check for user email
+
+  
   const user = await User.findOne({ email });
 
+
+    // If user doesn't exist
+  if (!user) {
+      res.status(401);
+      throw new Error('Invalid email or password');
+    }
+  
+    // Check if account is locked
+  if (user.isLocked()) {
+      const waitTime = Math.ceil((user.lockUntil - Date.now()) / 60000);
+      res.status(403);
+      throw new Error(`Too many failed attempts.Account is locked. Try again in ${waitTime} minute(s).
+      Or else use Forgot Password.`);
+    }
+
+
+
   if (user && (await user.matchPassword(password))) {
+
+    user.failedLoginAttempts = 0;
+    user.lockUntil = undefined;
+    await user.save();
+
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
       token: generateToken(user._id),
     });
-  } else {
+  } 
+  else 
+  {
+    user.failedLoginAttempts += 1;
+
+    if (user.failedLoginAttempts >= MAX_ATTEMPTS) {
+      user.lockUntil = Date.now() + LOCK_TIME;
+
+    }
+
+    await user.save();  
+
+
+    
     res.status(401);
     throw new Error('Invalid email or password');
   }
+
+
+
 });
 
 // @desc    Get user data
