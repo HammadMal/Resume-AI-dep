@@ -84,9 +84,9 @@ const TestimonialCardSection = () => {
             <div className="bg-gradient-to-r from-blue-400 to-purple-500 h-1.5 rounded-full" style={{ width: "85%" }}></div>
           </div>
           
-          <button onClick={handleupgraderesume} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all font-medium shadow-lg">
+          {/* <button onClick={handleupgraderesume} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all font-medium shadow-lg">
             Upgrade Your Resume Now
-          </button>
+          </button> */}
         </div>
       </div>
 

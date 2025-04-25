@@ -9,6 +9,16 @@ module.exports = {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
       },
+      animation: {
+        'marquee': 'marquee 190s linear infinite',
+        'marquee-pause': 'marquee 190s linear infinite paused',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' }
+        }
+      },
     },
   },
   plugins: [],
