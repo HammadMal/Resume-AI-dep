@@ -13,7 +13,7 @@ const TEXTS = [
 
 
 
-import TestimonialCardSection from "./testemonialcard";
+import TestimonialCardSection from "./Testemonialcard";
 
 
 const FirstHero = () => {

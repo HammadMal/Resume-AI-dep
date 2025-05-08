@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-import PricingPage from "./pricingpage";
+import PricingPage from "./Pricingpage";
 import { useNavigate } from "react-router-dom";
 
 
