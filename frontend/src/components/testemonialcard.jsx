@@ -65,7 +65,7 @@ const TestimonialCardSection = () => {
           {/* Testimonial content */}
           <div className="mb-8">
             <p className="text-white text-xl font-medium leading-relaxed mb-5">
-                "HR’s toughest challenge? Rejecting an AI-optimized CV. Good luck!"
+                "AI is going to be an incredible tool to help humans solve important problems. There’s a lot of promise in AI to improve everything from healthcare to education"
             </p>
             
             <div className="flex items-center space-x-4">
@@ -84,9 +84,9 @@ const TestimonialCardSection = () => {
             <div className="bg-gradient-to-r from-blue-400 to-purple-500 h-1.5 rounded-full" style={{ width: "85%" }}></div>
           </div>
           
-          <button onClick={handleupgraderesume} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all font-medium shadow-lg">
+          {/* <button onClick={handleupgraderesume} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all font-medium shadow-lg">
             Upgrade Your Resume Now
-          </button>
+          </button> */}
         </div>
       </div>
 

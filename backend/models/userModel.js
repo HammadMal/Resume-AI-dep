@@ -21,12 +21,19 @@ const userSchema = mongoose.Schema(
       required: [true, 'Please add a password'],
       minlength: 6,
     },
+    failedLoginAttempts: 
+    { type: Number, default: 0 },
+    lockUntil : {type : Date },
+    
+
     resetOTP: String,
     otpExpires: Date,
   },
   {
     timestamps: true,
   }
+
+
 );
 
 
@@ -44,5 +51,12 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+
+userSchema.methods.isLocked = function () {
+  return !!(this.lockUntil && this.lockUntil > Date.now());
+};
+
+
 
 module.exports = mongoose.model('User', userSchema);

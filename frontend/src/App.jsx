@@ -21,6 +21,8 @@ import PricingPage from "./components/pricingpage";
 
 import AboutUs  from "./components/AboutUs";
 
+import Demo from "./components/Demo";
+
 
 function App() {
   const ref = useRef(null); // Create a reference for the loading bar
@@ -50,6 +52,8 @@ function App() {
           <Route path="/pricingpage" element={<PricingPage />} />
 
           <Route path="/aboutus" element={<AboutUs />} />
+
+          <Route path="/demo" element={<Demo />} />
 
 
         </Routes>

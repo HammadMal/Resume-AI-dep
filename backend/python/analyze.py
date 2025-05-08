@@ -29,7 +29,7 @@ try:
     
     # Use the updated model name format. As of April 2025, this should be the correct format.
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-pro",  # Updated from gemini-pro to gemini-1.5-pro
+        model_name="gemini-2.0-flash",  # Updated from gemini-pro to gemini-1.5-pro
         generation_config=generation_config
     )
 except Exception as e:

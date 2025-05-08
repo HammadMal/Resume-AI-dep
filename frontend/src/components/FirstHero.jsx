@@ -1,10 +1,10 @@
-import React, {useEffect} from "react";
-
+import React, {useEffect, useRef} from "react";
+import { useNavigate } from "react-router-dom";
+import LoadingBar from "react-top-loading-bar";
 import Spotlightbox from "./Spotlightbox";
-
-import TextTransition, { presets } from 'react-text-transition';
-
 import { Typewriter } from 'react-simple-typewriter'; // ✅ CORRECT
+
+
 
 const TEXTS = [
   "Enhance Your Resume with AI Technology",
@@ -15,7 +15,11 @@ const TEXTS = [
 
 import TestimonialCardSection from "./testemonialcard";
 
+
 const FirstHero = () => {
+
+  const navigate = useNavigate();
+  const ref = useRef(null); // Create a reference for the loading bar
 
   const [index, setIndex] = React.useState(0);
 
@@ -28,34 +32,57 @@ const FirstHero = () => {
   }, []);
 
 
+  const handleonClick = () => {
+    if (ref.current) {
+        ref.current.continuousStart();
+        let progress = 0;
+        const interval = setInterval(() => {
+            if (!ref.current) {
+                clearInterval(interval);
+                return;
+            }
+            
+            progress += 20;
+            if (progress >= 90) {
+                clearInterval(interval);
+                if (ref.current) {
+                    ref.current.complete();
+                    setTimeout(() => navigate("/demo"), 200);
+                }
+            }
+        }, 100);
+    }
+};
+
+
 
     const handleGetStarted = () => {
-        if (ref.current) {
-          ref.current.continuousStart(); // Start loading animation
-          let progress = 0;
-          const interval = setInterval(() => 
-          {
-            progress += 20;
-            if (progress >= 90) 
-            {
-              clearInterval(interval);
-              ref.current.complete(); // Complete animation
-              setTimeout(() => navigate("/login"), 200);
-            } 
-            else 
-            {
-              ref.current.static(progress);
+    if (ref.current) {
+        ref.current.continuousStart();
+        let progress = 0;
+        const interval = setInterval(() => {
+            if (!ref.current) {
+                clearInterval(interval);
+                return;
             }
-          }, 100);
-        } 
-        
-        else {
-          console.error("Loading bar ref is null");
-        }
-      };
+            
+            progress += 20;
+            if (progress >= 90) {
+                clearInterval(interval);
+                if (ref.current) {
+                    ref.current.complete();
+                    setTimeout(() => navigate("/login"), 200);
+                }
+            }
+        }, 100);
+    }
+};
 
 
   return (
+    <>
+
+      <LoadingBar color="#3F7D58" ref={ref} height={3} />
           <Spotlightbox>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
 
@@ -100,7 +127,7 @@ const FirstHero = () => {
                 >
                   Get Started Free
                 </button>
-                <button className="bg-white/10 backdrop-blur-md text-white py-3 px-8 rounded-xl text-lg hover:bg-white/20 transition-all duration-300 flex items-center justify-center">
+                <button onClick={handleonClick} className="bg-white/10 backdrop-blur-md text-white py-3 px-8 rounded-xl text-lg hover:bg-white/20 transition-all duration-300 flex items-center justify-center">
                   Watch Demo
                 </button>
               </div>              
@@ -141,7 +168,7 @@ const FirstHero = () => {
           {/* <Spotlightbox /> */}
           </Spotlightbox>
           
-        
+  </>
     
   );
 }

@@ -1,7 +1,7 @@
 # AI-Powered Resume Checker
 
 ## 📌 Project Overview
-The **AI-Powered Resume Checker** is a web application that leverages **Natural Language Processing (NLP)** and **Machine Learning (ML)** to analyze resumes for quality, structure, and relevance to specific job descriptions. It provides actionable feedback to help users optimize their resumes for better job applications.
+The **AI-Powered Resume Checker** is a web application that leverages Google's Gemini API to analyze resumes for quality, structure, and relevance to specific job descriptions. It provides actionable feedback to help users optimize their resumes for better job applications.
 
 ## 🌟 Features
 - 📂 **Supports multiple formats**: Upload resumes in **PDF, Word, or plain text**.
@@ -16,18 +16,17 @@ The **AI-Powered Resume Checker** is a web application that leverages **Natural 
 | Component       | Technology  |
 |---------------|------------|
 | **Programming Language** | JavaScript |
-| **NLP Frameworks** | Hugging Face Transformers |
-| **ML Algorithms** | BERT, RoBERTa, TF-IDF |
+| **AI Frameworks** | Gemini |
 | **Backend** | Node.js,Express |
 | **Frontend** | React.js |
-| **File Handling** | PyPDF2, python-docx |
+| **File Handling** | PyPDF2|
 | **Database** | MongoDB |
 | **Deployment** | Heroku (backend), Vercel (frontend) |
 | **Version Control** | GitHub |
 
 ## 🏗 System Workflow
 1️⃣ **User Uploads Resume**
-   - Upload PDF, Word, or plain text resume.
+   - Upload PDF, plain text resume.
    - (Optional) Paste a job description for matching.
 
 2️⃣ **Preprocessing**
@@ -44,9 +43,9 @@ The **AI-Powered Resume Checker** is a web application that leverages **Natural 
    - Displays **strengths and improvement suggestions**.
 
 ## 🔗 Project Resources
-- **GitHub Repository**: [Link Here](https://github.com/HammadMal)
-- **Live Demo**: [Vercel Deployment](https://sched-u-track-web-and-app-dev.vercel.app/)
-- **Backend Hosted on**: Heroku
+- **GitHub Repository**: [Link Here](https://github.com/HammadMal/ADA_Project)
+- **Live Demo**: [Vercel Deployment]()
+- **Backend Hosted on**: Deployment is left.
 - **Trello Board**: [Project Management](https://trello.com/invite/b/67a7a430b2ad17790e1ffa3d/ATTIeef9d0b0d9afe6be4ad13b670b3239e89FA9FAD5/se-project)
 
 ## 🛠 How to Run Locally
@@ -71,7 +70,7 @@ The **AI-Powered Resume Checker** is a web application that leverages **Natural 
    ```bash
    cd frontend && npm start
    ```
-6. **Access the application** in the browser at `http://localhost:3000`
+6. **Access the application** in the browser at `http://localhost:5000`
 
 ## 👥 Team Members
 - **Hammad Malik**

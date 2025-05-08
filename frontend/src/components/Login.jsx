@@ -4,6 +4,7 @@ import LoadingBar from "react-top-loading-bar";
 import { AnimatedBackground } from 'animated-backgrounds';
 import { useAuth } from "../context/AuthContext";
 import transparent from "../assets/aa.png";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const Login = () => {
@@ -33,10 +34,11 @@ const Login = () => {
       setError('');
       
       if (!email || !password) {
+        toast.error('Please fill in all fields');
         setError('Please fill in all fields');
         return;
       }
-
+    
       setIsLoading(true);
       ref.current.continuousStart();
       
@@ -45,6 +47,7 @@ const Login = () => {
         ref.current.complete();
         navigate("/homepage");
       } catch (error) {
+        toast.error(error.message);
         setError(error.message);
         ref.current.complete();
         setIsLoading(false);
@@ -73,6 +76,7 @@ const Login = () => {
 
     return (
       <div className="min-h-screen relative overflow-hidden">
+        <Toaster />         
         {/* Loading Bar */}
         <LoadingBar color="#3F7D58" ref={ref} height={3} />
         
