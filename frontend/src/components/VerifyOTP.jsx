@@ -6,6 +6,9 @@ import { AnimatedBackground } from "animated-backgrounds";
 
 import transparent from "../assets/aa.png";
 
+import API_BASE_URL from '../config/api';
+
+
 const VerifyOTP = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,7 +34,7 @@ const VerifyOTP = () => {
     console.log("OTP:", otp);
   
     try {
-      const res = await axios.post("http://localhost:5000/api/users/verify-otp", {
+      const res = await axios.post(`${API_BASE_URL}/api/users/verify-otp`, {
         email,
         otp,
       });

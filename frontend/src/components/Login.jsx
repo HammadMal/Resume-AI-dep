@@ -5,6 +5,8 @@ import { AnimatedBackground } from 'animated-backgrounds';
 import { useAuth } from "../context/AuthContext";
 import transparent from "../assets/aa.png";
 import toast, { Toaster } from 'react-hot-toast';
+import API_BASE_URL from '../config/api';
+
 
 
 const Login = () => {
@@ -71,7 +73,7 @@ const Login = () => {
     };
 
     const handleGoogleLogin = () => {
-      window.location.href = 'http://localhost:5000/api/users/google';
+      window.location.href = `${API_BASE_URL}/api/users/google`;
     };
 
     return (

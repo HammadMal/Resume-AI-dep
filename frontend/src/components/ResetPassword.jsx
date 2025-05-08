@@ -5,6 +5,8 @@ import LoadingBar from "react-top-loading-bar";
 import { AnimatedBackground } from 'animated-backgrounds';
 
 import transparent from "../assets/aa.png";
+import API_BASE_URL from '../config/api';
+
 
 
 const ResetPassword = () => {
@@ -35,8 +37,7 @@ const ResetPassword = () => {
     ref.current.continuousStart();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/reset-password", {
-        email,
+      const res = await axios.post(`${API_BASE_URL}/api/users/reset-password`, {        email,
         otp,
         newPassword,
       });
