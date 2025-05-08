@@ -14,9 +14,9 @@ import VerifyOTP from "./components/VerifyOTP";
 
 import ResetPassword from "./components/ResetPassword";
 
-import ContactUs from "./components/contactus";
+import ContactUs from "./components/Contactus";
 
-import PricingPage from "./components/pricingpage";
+import PricingPage from "./components/Pricingpage";
 
 
 import AboutUs  from "./components/AboutUs";
