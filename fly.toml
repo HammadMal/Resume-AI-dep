@@ -26,7 +26,7 @@ primary_region = 'sin'
     hard_limit = 1000
     soft_limit = 500
 
-# Updated CORS configuration with X-Requested-With header
+# Updated CORS configuration
 [[http_service.cors]]
     allowed_origins = [
       "http://localhost:5173",
@@ -36,12 +36,12 @@ primary_region = 'sin'
       "https://resume-ai-553fj7xs0-hammadmals-projects.vercel.app"
     ]
     allowed_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    allowed_headers = ["Content-Type", "Authorization", "X-Requested-With"]
+    allowed_headers = ["Content-Type", "Authorization", "X-Requested-With", "Accept"]
     exposed_headers = ["Content-Length", "X-Request-Id"]
     allow_credentials = true
     max_age = 86400
 
-# Add HTTP headers directly
+# Add HTTP headers
 [[http_service.http_headers]]
   for = "/*"
   [http_service.http_headers.values]
@@ -49,6 +49,10 @@ primary_region = 'sin'
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Strict-Transport-Security = "max-age=15552000; includeSubDomains"
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, X-Requested-With, Accept"
+    Access-Control-Allow-Credentials = "true"
 
 [[vm]]
   memory = '1gb'

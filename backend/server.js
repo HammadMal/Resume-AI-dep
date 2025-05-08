@@ -19,24 +19,35 @@ connectDB();
 
 const app = express();
 
-// CORS Configuration - Updated to properly handle CORS
+// CORS Configuration
 app.use(cors({
-  // Allow specific origins or use an array for multiple origins
   origin: [
+    'https://resume-ai-dep.vercel.app',
+    'https://resume-ai-dep-git-main-hammadmals-projects.vercel.app',
     'https://resume-ai-553fj7xs0-hammadmals-projects.vercel.app',
-    'https://resume-ai.vercel.app',
-    'http://localhost:5173', // For local development
-    // Add any additional origins as needed
+    'http://localhost:5173' // For local development
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
+// Pre-flight requests
+app.options('*', cors());
+
 // Add these headers to all responses
 app.use((req, res, next) => {
-  // Backup in case the CORS middleware doesn't work properly
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  // Explicitly set these headers for each response
+  const origin = req.headers.origin;
+  if (origin && [
+    'https://resume-ai-dep.vercel.app',
+    'https://resume-ai-dep-git-main-hammadmals-projects.vercel.app', 
+    'https://resume-ai-553fj7xs0-hammadmals-projects.vercel.app',
+    'http://localhost:5173'
+  ].includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');

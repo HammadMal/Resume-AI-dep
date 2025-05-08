@@ -1,9 +1,6 @@
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 
-
-// const API_URL = `${API_BASE_URL}/api/analyzer/`;
-
 const API_URL = `${API_BASE_URL}/api/analyzer/`;
 
 const analyzeResume = async (formData) => {
@@ -35,27 +32,36 @@ const analyzeResume = async (formData) => {
         reader.readAsDataURL(file);
         const base64Content = await fileContentPromise;
 
-        const requestData = new FormData();
-        requestData.append('file_content', base64Content);
-        requestData.append('file_type', file.type === 'application/pdf' ? 'pdf' : 'txt');
-        requestData.append('jobDescription', jobDescription);
+        const requestData = {
+            file_content: base64Content,
+            file_type: file.type === 'application/pdf' ? 'pdf' : 'txt',
+            jobDescription: jobDescription
+        };
 
+        // Use JSON instead of FormData for better CORS compatibility
         const response = await axios.post(API_URL + 'analyze', requestData, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
+            withCredentials: false // Important for CORS
         });
 
         return response.data;
     } catch (error) {
-        console.error('Server error:', error.response?.data || error.message);
+        console.error('Server error:', error);
+        
         if (error.response?.status === 401) {
             // Handle unauthorized error
             localStorage.removeItem('userToken'); // Clear invalid token
             window.location.href = '/login'; // Redirect to login
             throw new Error('Session expired. Please login again.');
         }
+        
+        if (error.message === 'Network Error') {
+            throw new Error('Network error: Unable to connect to the server. This may be due to a CORS issue.');
+        }
+        
         throw new Error(
             error.response?.data?.message || 
             'Failed to analyze resume. Please try again.'
@@ -65,7 +71,7 @@ const analyzeResume = async (formData) => {
 
 const downloadReport = async (analysisResults) => {
     try {
-        const token = localStorage.getItem('userToken'); // Changed from 'token' to 'userToken'
+        const token = localStorage.getItem('userToken');
         
         if (!token) {
             throw new Error('Not authorized. Please login again.');
@@ -79,7 +85,8 @@ const downloadReport = async (analysisResults) => {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
-            responseType: 'blob'
+            responseType: 'blob',
+            withCredentials: false // Important for CORS
         });
 
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -93,12 +100,14 @@ const downloadReport = async (analysisResults) => {
         document.body.removeChild(link);
 
     } catch (error) {
+        console.error('Download error:', error);
+        
         if (error.response?.status === 401) {
-            // Handle unauthorized error
             localStorage.removeItem('userToken');
             window.location.href = '/login';
             throw new Error('Session expired. Please login again.');
         }
+        
         throw new Error('Failed to download report. Please try again.');
     }
 };
