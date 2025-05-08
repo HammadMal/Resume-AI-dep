@@ -11,7 +11,7 @@ import TrustedBy from "./TrustedBy";
 import Features from "./Features";
 
 import Howitworks from "./Howitworks";
-import MarqueeDemo from "./reviews";
+import MarqueeDemo from "./Reviews";
 
 import Pricing from "./pricing";
 
