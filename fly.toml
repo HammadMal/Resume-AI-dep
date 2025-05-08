@@ -16,10 +16,29 @@ primary_region = 'sin'
 [http_service]
   internal_port = 5000
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
-  processes = ['app']
+  processes = ["app"]
+  
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 500
+
+[[http_service.cors]]
+    allowed_origins = [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "https://resume-ai-dep.vercel.app",
+      "https://resume-ai-dep-git-main-hammadmals-projects.vercel.app",
+      "https://resume-ai-553fj7xs0-hammadmals-projects.vercel.app"
+    ]
+    allowed_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    allowed_headers = ["Content-Type", "Authorization"]
+    exposed_headers = ["Content-Length", "X-Request-Id"]
+    allow_credentials = true
+    max_age = 86400
 
 [[vm]]
   memory = '1gb'
