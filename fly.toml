@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for resume-ai-backend-silent-firefly-1090 on 2025-05-08T23:37:00+05:00
+# fly.toml app configuration file for resume-ai-backend-silent-firefly-1090
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -26,6 +26,7 @@ primary_region = 'sin'
     hard_limit = 1000
     soft_limit = 500
 
+# Updated CORS configuration with X-Requested-With header
 [[http_service.cors]]
     allowed_origins = [
       "http://localhost:5173",
@@ -35,10 +36,19 @@ primary_region = 'sin'
       "https://resume-ai-553fj7xs0-hammadmals-projects.vercel.app"
     ]
     allowed_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    allowed_headers = ["Content-Type", "Authorization"]
+    allowed_headers = ["Content-Type", "Authorization", "X-Requested-With"]
     exposed_headers = ["Content-Length", "X-Request-Id"]
     allow_credentials = true
     max_age = 86400
+
+# Add HTTP headers directly
+[[http_service.http_headers]]
+  for = "/*"
+  [http_service.http_headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Strict-Transport-Security = "max-age=15552000; includeSubDomains"
 
 [[vm]]
   memory = '1gb'
