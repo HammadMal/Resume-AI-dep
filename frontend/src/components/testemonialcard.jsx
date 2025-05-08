@@ -65,7 +65,7 @@ const TestimonialCardSection = () => {
           {/* Testimonial content */}
           <div className="mb-8">
             <p className="text-white text-xl font-medium leading-relaxed mb-5">
-                "HR’s toughest challenge? Rejecting an AI-optimized CV. Good luck!"
+                "AI is going to be an incredible tool to help humans solve important problems. There’s a lot of promise in AI to improve everything from healthcare to education"
             </p>
             
             <div className="flex items-center space-x-4">

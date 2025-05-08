@@ -53,7 +53,7 @@ return (
             <h2 className="text-3xl font-bold text-white text-center mb-8">Demo Video</h2>
             <div className="video-wrapper aspect-video relative w-full overflow-hidden rounded-lg">
                 <ReactPlayer
-                    url='https://www.youtube.com/watch?v=LXb3EKWsInQ'
+                    url='https://www.youtube.com/watch?v=n2RApvKNGBQ&ab_channel=HammadMalik'
                     width="100%"
                     height="100%"
                     controls={true}
