@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatedBackground } from 'animated-backgrounds';
 import LoadingBar from "react-top-loading-bar";
-import Footer from "./footer";
+import Footer from "./Footer";
 import Navbar from "./Navbar";
 
 import FirstHero from "./FirstHero";
@@ -13,7 +13,7 @@ import Features from "./Features";
 import Howitworks from "./Howitworks";
 import MarqueeDemo from "./Reviews";
 
-import Pricing from "./pricing";
+import Pricing from "./Pricing";
 
   
 const Firstpage = () => {
