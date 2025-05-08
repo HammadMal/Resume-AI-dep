@@ -38,6 +38,17 @@ app.use(
 app.use(passport.initialize());   // ✅
 app.use(passport.session());      // ✅
 
+// Only try to initialize passport config if GOOGLE_CLIENT_ID exists
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  console.log('Initializing Google OAuth with provided credentials');
+  try {
+    require('./config/passport')(passport);
+  } catch (err) {
+    console.error('Error initializing passport:', err.message);
+  }
+} else {
+  console.log('Google OAuth credentials not found, skipping OAuth setup');
+}
 
 app.use(fileUpload({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
@@ -67,8 +78,8 @@ app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
 
 //comment
