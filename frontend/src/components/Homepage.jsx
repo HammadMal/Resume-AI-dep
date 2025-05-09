@@ -19,6 +19,7 @@ const Homepage = () => {
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
     const [pdfUrl, setPdfUrl] = useState(null);
+    const [scale, setScale] = useState(1.0); // Add this new state variable for zoom control
     const [resumeFile, setResumeFile] = useState(null);
     const [resumeText, setResumeText] = useState("");
     const [jobDescription, setJobDescription] = useState(() => {
@@ -45,6 +46,16 @@ const Homepage = () => {
     useEffect(() => {
         localStorage.setItem('jobDescription', jobDescription);
     }, [jobDescription]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            // Force re-render on window resize to update PDF dimensions
+            setScale(scale => scale);
+        };
+        
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Clear localStorage when user logs out
     const handleLogout = () => {
@@ -247,52 +258,77 @@ const Homepage = () => {
                                     </div>
 
                                     {/* Move PDF Preview here - right after the Change File button */}
-                                    {resumeFile.type === 'application/pdf' && (
-                                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                                            <div className="flex justify-between items-center mb-4">
-                                                <h3 className="text-white font-medium">PDF Preview</h3>
-                                                <div className="flex items-center space-x-2">
-                                                    <button 
-                                                        onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
-                                                        disabled={pageNumber <= 1}
-                                                        className="p-2 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 text-white"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                                        </svg>
-                                                    </button>
-                                                    <span className="text-white/70">
-                                                        Page {pageNumber} of {numPages}
-                                                    </span>
-                                                    <button 
-                                                        onClick={() => setPageNumber(Math.min(numPages, pageNumber + 1))}
-                                                        disabled={pageNumber >= numPages}
-                                                        className="p-2 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 text-white"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-center bg-white/5 rounded-lg p-4">
-                                                <Document
-                                                    file={pdfUrl}
-                                                    onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-                                                    onLoadError={(error) => setError("Error loading PDF")}
-                                                    className="max-w-full"
-                                                >
-                                                    <Page
-                                                        pageNumber={pageNumber}
-                                                        renderTextLayer={false}
-                                                        renderAnnotationLayer={false}
-                                                        className="max-w-full"
-                                                        scale={1.2}
-                                                    />
-                                                </Document>
-                                            </div>
-                                        </div>
-                                    )}
+                                                    {resumeFile.type === 'application/pdf' && (
+                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                        <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+                            <h3 className="text-white font-medium mb-2 sm:mb-0">PDF Preview</h3>
+                            <div className="flex items-center space-x-2">
+                                <button 
+                                    onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
+                                    disabled={pageNumber <= 1}
+                                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 text-white"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <span className="text-white/70">
+                                    Page {pageNumber} of {numPages || 1}
+                                </span>
+                                <button 
+                                    onClick={() => setPageNumber(Math.min(numPages || 1, pageNumber + 1))}
+                                    disabled={!numPages || pageNumber >= numPages}
+                                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 text-white"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div className="flex justify-center bg-white/5 rounded-lg p-2 overflow-auto">
+                            <Document
+                                file={pdfUrl}
+                                onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+                                onLoadError={(error) => setError("Error loading PDF")}
+                                className="max-w-full"
+                            >
+                                <Page
+                                    pageNumber={pageNumber}
+                                    renderTextLayer={false}
+                                    renderAnnotationLayer={false}
+                                    scale={scale}
+                                    width={Math.min(window.innerWidth - 40, 600)} // Responsive width calculation
+                                    className="mx-auto" // Center the PDF
+                                />
+                            </Document>
+                        </div>
+                        {/* Zoom controls for mobile */}
+                        <div className="mt-4 flex justify-center sm:justify-end">
+                            <div className="bg-white/5 rounded-lg p-2 flex items-center space-x-4">
+                                <span className="text-white/70 text-sm hidden sm:inline">Zoom:</span>
+                                <div className="flex space-x-2">
+                                    <button 
+                                        onClick={() => setScale(Math.max(0.7, scale - 0.1))}
+                                        className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                        </svg>
+                                    </button>
+                                    <button 
+                                        onClick={() => setScale(Math.min(2.0, scale + 0.1))}
+                                        className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                                     <input 
                                         type="file"

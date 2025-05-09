@@ -41,7 +41,7 @@ router.get(
     const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
       expiresIn: '30d',
     });
-    res.redirect(`http://localhost:5173/auth/google?token=${token}`);
+    res.redirect(`https://resume-ai-dep.vercel.app/auth/google?token=${token}`);
 
 
   }

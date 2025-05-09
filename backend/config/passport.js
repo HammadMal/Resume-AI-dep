@@ -21,13 +21,17 @@ module.exports = function(passport) {
     return;
   }
   
+  
+  const callbackURL = 'https://resume-ai-backend-silent-firefly-1090.fly.dev/api/users/google/callback';
+
+  
   // If we get here, credentials exist
   try {
     passport.use(
       new GoogleStrategy({
           clientID: process.env.GOOGLE_CLIENT_ID,
           clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-          callbackURL: '/api/users/google/callback'
+          callbackURL: callbackURL
         },
         async (accessToken, refreshToken, profile, done) => {
           try {
@@ -61,7 +65,7 @@ module.exports = function(passport) {
       }
     });
     
-    console.log('Google OAuth strategy initialized successfully');
+    console.log('Google OAuth strategy initialized successfully with callback URL:', callbackURL);
   } catch (err) {
     console.error('Failed to initialize Google OAuth strategy:', err);
   }
