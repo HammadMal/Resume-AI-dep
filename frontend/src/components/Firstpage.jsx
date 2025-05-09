@@ -51,7 +51,7 @@ const Firstpage = () => {
 
   return (
     <div className="relative">
-      <div className="fixed top-0 left-0 right-0 z-[9999]">
+      <div className="loading-bar-container">
         <LoadingBar color="#3F7D58" ref={ref} height={3} />
       </div>
       <div className="min-h-screen relative overflow-hidden">
