@@ -54,7 +54,19 @@ const Firstpage = () => {
     <div className="min-h-screen relative overflow-hidden">
               <LoadingBar color="#3F7D58" ref={ref} height={3} />
 
-              <OptimizedBackground />
+      {/* Animated Background */}
+      <div className="absolute inset-0 z-0">
+        <AnimatedBackground 
+          animationName="auroraBorealis" 
+          blendMode="normal" 
+          style={{ opacity: 1 }} 
+        />
+      </div>
+
+    
+
+      {/* Overlay gradient for better text contrast */}
+      <div className="fixed inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1 bg-fixed"></div>
 
 
     
