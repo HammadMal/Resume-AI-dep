@@ -7,6 +7,8 @@ import transparent from "../assets/aa.png";
 import toast, { Toaster } from 'react-hot-toast';
 import API_BASE_URL from '../config/api';
 
+import OptimizedBackground from "./OptimizedBackground";
+
 
 
 const Login = () => {
@@ -83,16 +85,9 @@ const Login = () => {
         <LoadingBar color="#3F7D58" ref={ref} height={3} />
         
         {/* Animated Background */}
-        <div className="absolute inset-0 z-0">
-          <AnimatedBackground 
-            animationName="auroraBorealis" 
-            blendMode="normal" 
-            style={{ opacity: 1 }} 
-          />
-        </div>
+        <OptimizedBackground/>
 
         {/* Overlay gradient for better text contrast */}
-        <div className="fixed inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1 "></div>
         
         {/* Header/Navigation */}
         <header className="relative z-10 py-4 px-6 md:px-12">
