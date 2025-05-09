@@ -2,8 +2,8 @@ name: Keep App Warm
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Runs every 15 minutes
-  workflow_dispatch:        # Adds manual trigger button
+    - cron: '*/3 * * * *'  # Run more frequently
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   ping:
@@ -11,7 +11,17 @@ jobs:
     steps:
       - name: Ping application
         run: |
-          # Try to hit the root endpoint first, then fallback to others
-          curl -s https://resume-ai-backend-silent-firefly-1090.fly.dev/ || \
-          curl -s https://resume-ai-backend-silent-firefly-1090.fly.dev/health || \
-          curl -s https://resume-ai-backend-silent-firefly-1090.fly.dev/api || true
+          # Add a more thorough check with output
+          RESPONSE=$(curl -s https://resume-ai-backend-silent-firefly-1090.fly.dev/)
+          echo "Response received: $RESPONSE"
+          
+          # Check HTTP status code
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://resume-ai-backend-silent-firefly-1090.fly.dev/)
+          echo "HTTP status code: $STATUS"
+          
+          if [[ "$STATUS" == "200" ]]; then
+            echo "Application is responding correctly!"
+          else
+            echo "Warning: Application returned non-200 status code"
+            exit 1
+          fi
