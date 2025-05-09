@@ -50,82 +50,45 @@ const Firstpage = () => {
 
 
   return (
-    <div className="relative">
-      <div className="loading-bar-container">
+    <>
+      <div className="fixed top-0 left-0 right-0 z-[9999]">
         <LoadingBar color="#3F7D58" ref={ref} height={3} />
       </div>
       <div className="min-h-screen relative overflow-hidden">
-
-      {/* Animated Background */}
-      <div className="absolute inset-0 z-0">
-        <AnimatedBackground 
-          animationName="auroraBorealis" 
-          blendMode="normal" 
-          style={{ opacity: 1 }} 
-        />
-      </div>
-
-    
-
-      {/* Overlay gradient for better text contrast */}
-      <div className="fixed inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1 bg-fixed"></div>
-
-
-    
-
-
-      {/* Header/Navigation */}
-      <Navbar />
-
-
-
-      {/* Hero Section */}
-      <main className={`relative z-10 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-100'}`}>
-        
-        <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-20">          
-          <FirstHero />
-        <TrustedBy/>
+        {/* Animated Background */}
+        <div className="absolute inset-0 z-0">
+          <AnimatedBackground 
+            animationName="auroraBorealis" 
+            blendMode="normal" 
+            style={{ opacity: 1 }} 
+          />
         </div>
 
-        <Features />
-        
-        
+        {/* Overlay gradient for better text contrast */}
+        <div className="fixed inset-0 bg-gradient-to-b from-black/50 to-blue-900/50 z-1 bg-fixed"></div>
 
+        {/* Header/Navigation */}
+        <Navbar />
 
-          {/* How It Works Section */}
-          {/* <div id="how-it-works" className="max-w-4xl mx-auto px-6 md:px-12 py-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">How it works?</h2>
-            <h3 className="text-xl md:text-2xl text-white/80 text-center mb-12">What happens behind the scenes?</h3> */}
+        {/* Hero Section */}
+        <main className={`relative z-10 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-100'}`}>
+          <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-20">          
+            <FirstHero loadingBarRef={ref} />
+            <TrustedBy/>
+          </div>
+
+          <Features />
 
           <Howitworks />
 
+          <Pricing />
 
-        {/* Pricing Section */}
+          <MarqueeDemo />
 
-        <Pricing />
-
-        {/* Reviews Section */}
-
-        <MarqueeDemo />
-
-        {/* Footer */}
-        
-        <Footer />
-
-
-
-
-
-
-
-
-
-
-
-
-      </main>
-    </div>
-    </div>
+          <Footer />
+        </main>
+      </div>
+    </>
   );
 };
 

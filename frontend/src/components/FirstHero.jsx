@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from "react";
 import { useNavigate } from "react-router-dom";
-import LoadingBar from "react-top-loading-bar";
 import Spotlightbox from "./Spotlightbox";
 import { Typewriter } from 'react-simple-typewriter'; // ✅ CORRECT
 
@@ -16,10 +15,10 @@ const TEXTS = [
 import TestimonialCardSection from "./Testemonialcard";
 
 
-const FirstHero = () => {
+const FirstHero = ({ loadingBarRef }) => {
 
   const navigate = useNavigate();
-  const ref = useRef(null); // Create a reference for the loading bar
+  const ref = loadingBarRef; // Use the passed ref instead
 
   const [index, setIndex] = React.useState(0);
 
@@ -82,7 +81,6 @@ const FirstHero = () => {
   return (
     <>
 
-      <LoadingBar color="#3F7D58" ref={ref} height={3} />
           <Spotlightbox>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
 
