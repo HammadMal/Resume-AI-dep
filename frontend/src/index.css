@@ -12,7 +12,7 @@
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   z-index: -1;
-  transform: translateZ(0); /* Hardware acceleration */
+  transform: translate3d(0,0,0);
   -webkit-backface-visibility: hidden; /* Prevent flickering on iOS */
   backface-visibility: hidden;
   will-change: transform;
@@ -49,6 +49,16 @@
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* Allow text selection only for specific elements */
+p, h1, h2, h3, h4, h5, h6, span, input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 html {
@@ -57,6 +67,8 @@ html {
   background-color: #1a1a1a;
   scroll-behavior: smooth;
   scroll-padding-top: 0;
+  -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+  touch-action: manipulation;
 }
 
 html, 
@@ -79,6 +91,8 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background: transparent;
+  touch-action: pan-y pinch-zoom;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Scrollbar Styling */
@@ -122,4 +136,11 @@ main {
   transform: translateZ(0);
   will-change: transform;
   backface-visibility: hidden;
+}
+
+/* Add momentum scrolling optimization */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  overscroll-behavior-y: none;
 }
