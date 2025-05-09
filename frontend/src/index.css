@@ -2,22 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ======= ANIMATION OPTIMIZATIONS ======= */
 .animated-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background: linear-gradient(-45deg, #1a1a1a, #2d3748, #1e3a8a, #1f2937);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
-  z-index: -1;
-  will-change: transform;
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  perspective: 1000;
 }
 
 @keyframes gradient {
@@ -32,123 +20,44 @@
   }
 }
 
-/* ======= GLASS EFFECT OPTIMIZATIONS ======= */
 .glass-effect {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000;
 }
 
-/* ======= MOBILE OPTIMIZATIONS ======= */
+/* Reset CSS */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-touch-callout: none;
-  touch-action: manipulation;
 }
 
-/* Allow text selection only for specific elements */
-p, h1, h2, h3, h4, h5, h6, span, input, textarea {
-  -webkit-user-select: text;
-  user-select: text;
-}
-
-html {
-  overscroll-behavior: none;
-  background-attachment: fixed;
-  background-color: #1a1a1a;
-  scroll-behavior: smooth;
-  scroll-padding-top: 0;
-  -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
-}
-
-html, 
-body, 
-#root {
+Reset styles for full-page gradient
+html, body, #root {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
-  width: 100%;
-  overflow-x: hidden;
-  background-color: #1a1a1a; /* Fallback color */
-  position: relative;
-  -webkit-overflow-scrolling: touch;
+  height: 100%; /* Ensure full height */
+  width: 100%; /* Ensure full width */
+  background: white;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Keeps gradient static during scroll */
+  font-family: 'Inter';
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+
 
 body {
-  position: relative;
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  overflow-x: hidden;
-  background: transparent;
-}
-
-/* ======= FLICKERING FIX ======= */
-/* The main fixes for the black flickering issue */
-.animated-background-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  overflow: hidden;
-  transform: translate3d(0,0,0);
-  -webkit-transform: translate3d(0,0,0);
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  backface-visibility: hidden;
-  perspective: 1000;
-  -webkit-perspective: 1000;
-  touch-action: none;
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Prevent black flash on touch */
-.animated-background-container {
-  -webkit-transform: translate3d(0,0,0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform: translate3d(0,0,0);
-  transform-style: preserve-3d;
-  width: 100%;
-  height: 100%;
-  touch-action: none;
-  -webkit-transform-style: preserve-3d;
-}
-
-/* Prevent touch highlighting */
-a, button, [role="button"], input, select, textarea {
-  -webkit-tap-highlight-color: transparent;
-  tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-/* Fix for overlay gradients */
-.overlay-gradient {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 1;
-  transform: translate3d(0,0,0);
-  -webkit-transform: translate3d(0,0,0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+  justify-content: center;
+  align-items: center;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Scrollbar Styling */
@@ -169,7 +78,7 @@ a, button, [role="button"], input, select, textarea {
   background: #555;
 }
 
-/* Tailwind Overrides */
+/* Tailwind Overrides (Optional) */
 .bg-gradient-to-r {
   background: linear-gradient(to right, #4f46e5, #6d28d9);
 }
@@ -185,39 +94,4 @@ button {
 a {
   text-decoration: none;
   color: inherit;
-}
-
-/* Prevent content shifting */
-main {
-  transform: translateZ(0);
-  will-change: transform;
-  backface-visibility: hidden;
-}
-
-/* Add momentum scrolling optimization */
-.scroll-container {
-  -webkit-overflow-scrolling: touch;
-  overflow-y: auto;
-  overscroll-behavior-y: none;
-}
-
-/* Marquee animation */
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-100%); }
-}
-
-.animate-marquee {
-  animation: marquee 190s linear infinite;
-}
-
-.animate-marquee-pause {
-  animation: marquee 190s linear infinite paused;
-}
-
-/* Prevent content selection on touch */
-.no-select {
-  -webkit-user-select: none;
-  user-select: none;
-  touch-action: manipulation;
 }
