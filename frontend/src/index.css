@@ -55,6 +55,8 @@ html {
   overscroll-behavior: none;
   background-attachment: fixed;
   background-color: #1a1a1a;
+  scroll-behavior: smooth;
+  scroll-padding-top: 0;
 }
 
 html, 
