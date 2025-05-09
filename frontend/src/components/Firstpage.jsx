@@ -50,8 +50,10 @@ const Firstpage = () => {
 
 
   return (
-    <>
-      <LoadingBar color="#3F7D58" ref={ref} height={3} />
+    <div className="relative">
+      <div className="fixed top-0 left-0 right-0 z-[9999]">
+        <LoadingBar color="#3F7D58" ref={ref} height={3} />
+      </div>
       <div className="min-h-screen relative overflow-hidden">
 
       {/* Animated Background */}
@@ -123,7 +125,7 @@ const Firstpage = () => {
 
       </main>
     </div>
-    </>
+    </div>
   );
 };
 
