@@ -103,6 +103,10 @@ app.get('/login', (req, res) => {
   res.send('Login is running...');
 });
 
+app.get('/health', (req, res) => {
+  res.send('Server is healthy');
+});
+
 // Error handler middleware
 app.use(errorHandler);
 
