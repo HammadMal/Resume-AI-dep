@@ -7,7 +7,6 @@ import transparent from "../assets/aa.png";
 import toast, { Toaster } from 'react-hot-toast';
 import API_BASE_URL from '../config/api';
 
-import OptimizedBackground from "./OptimizedBackground";
 
 
 

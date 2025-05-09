@@ -15,7 +15,6 @@ import MarqueeDemo from "./Reviews";
 
 import Pricing from "./Pricing";
 
-import OptimizedBackground from "./OptimizedBackground";
 
   
 const Firstpage = () => {
