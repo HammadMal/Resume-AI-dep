@@ -9,20 +9,13 @@ import Firstpage from "./components/Firstpage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import GoogleAuthHandler from "./components/GoogleAuthHandler";
-
 import VerifyOTP from "./components/VerifyOTP";
-
 import ResetPassword from "./components/ResetPassword";
-
 import ContactUs from "./components/Contactus";
-
 import PricingPage from "./components/Pricingpage";
-
-
-import AboutUs  from "./components/AboutUs";
-
+import AboutUs from "./components/AboutUs";
 import Demo from "./components/Demo";
-
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   const ref = useRef(null); // Create a reference for the loading bar
@@ -31,6 +24,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <LoadingBar color="#f11946" ref={ref} height={3} /> {/* Add the loading bar */}
         
         <Routes>
@@ -46,16 +40,10 @@ function App() {
           <Route path="/auth/google" element={<GoogleAuthHandler />} />
           <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-
           <Route path ="/contactus" element={<ContactUs />} />
-
           <Route path="/pricingpage" element={<PricingPage />} />
-
           <Route path="/aboutus" element={<AboutUs />} />
-
           <Route path="/demo" element={<Demo />} />
-
-
         </Routes>
       </Router>
     </AuthProvider>
