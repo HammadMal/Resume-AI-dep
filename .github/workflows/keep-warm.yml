@@ -2,7 +2,7 @@ name: Keep App Warm
 
 on:
   schedule:
-    - cron: '*/3 * * * *'  # Run more frequently
+    - cron: '*/3 * * * *'  # Run every 3 minutes
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
