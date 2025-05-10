@@ -25,6 +25,7 @@ app.use(cors({
     'https://resume-ai-dep.vercel.app',
     'https://resume-ai-dep-git-main-hammadmals-projects.vercel.app',
     'https://resume-ai-553fj7xs0-hammadmals-projects.vercel.app',
+    'https://www.resume-ai.site',
     'http://localhost:5173' // For local development
   ],
   credentials: true,
@@ -106,6 +107,8 @@ app.get('/login', (req, res) => {
 app.get('/health', (req, res) => {
   res.send('Server is healthy');
 });
+
+
 
 // Error handler middleware
 app.use(errorHandler);
