@@ -8,10 +8,10 @@ import traceback
 import re
 from dotenv import load_dotenv
 
-# For improved PDF handling
-from pypdf import PdfReader  # Using pypdf instead of PyPDF2
+# For improved PDF handlingggggg
+from pypdf import PdfReader
 try:
-    import pdfplumber  # Better for complex PDF layouts
+    import pdfplumber
 except ImportError:
     pdfplumber = None
 
@@ -29,9 +29,9 @@ try:
     
     # Initialize the model with the correct model name
     generation_config = {
-        "temperature": 0.7,
-        "top_p": 0.85,
-        "max_output_tokens": 1024,
+        "temperature": 0.2,  # Lowered temperature for more consistent outputs
+        "top_p": 0.8,
+        "max_output_tokens": 2048,  # Increased output tokens to avoid truncation
     }
     
     # Use the updated model name format
@@ -43,139 +43,124 @@ except Exception as e:
     print(f"Error configuring Gemini AI: {str(e)}", file=sys.stderr)
     sys.exit(1)
 
-def clean_json_string(json_str):
-    """Fix common JSON issues that cause parsing errors."""
-    if not json_str:
-        return "{}"
-        
-    # Save the original for debugging
-    original = json_str
+def extract_json_from_response(text):
+    """Extract JSON object from text that might contain extra content."""
+    # Find the first { and the last }
+    start_idx = text.find('{')
+    end_idx = text.rfind('}')
     
-    try:
-        # Try to parse as is first
-        json.loads(json_str)
-        return json_str
-    except:
-        # If parsing fails, try to fix common issues
+    if start_idx >= 0 and end_idx > start_idx:
         try:
-            # Remove line breaks inside strings that aren't properly escaped
-            pattern = r'("(?:\\.|[^"\\])*")|\n'
-            def replace_newlines(match):
-                if match.group(1):  # This is a string, don't touch it
-                    return match.group(1)
-                return " "  # Replace newline with space
-            json_str = re.sub(pattern, replace_newlines, json_str)
-            
-            # Remove trailing commas in arrays and objects
-            json_str = re.sub(r',\s*]', ']', json_str)
-            json_str = re.sub(r',\s*}', '}', json_str)
-            
-            # Fix missing quotes around keys
-            json_str = re.sub(r'(\s*})(\s*[,}])', r'\1,\2', json_str)
-            
-            # Fix missing quotes around property names
-            json_str = re.sub(r'([{,]\s*)([a-zA-Z0-9_]+)(\s*:)', r'\1"\2"\3', json_str)
-            
-            # Try to parse the fixed JSON
-            json.loads(json_str)
-            return json_str
+            json_str = text[start_idx:end_idx+1]
+            # Try to parse extracted JSON
+            json_obj = json.loads(json_str)
+            return json_obj
         except:
-            # If still failing, try more aggressive approaches
+            pass
+    
+    # If the above extraction fails, try regex pattern matching
+    json_pattern = r'\{(?:[^{}]|(?:\{[^{}]*\}))*\}'
+    matches = re.findall(json_pattern, text, re.DOTALL)
+    
+    if matches:
+        for potential_json in matches:
             try:
-                # Find all JSON-like objects in the string
-                pattern = r'(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\})'
-                matches = re.findall(pattern, json_str)
-                
-                for potential_json in matches:
-                    try:
-                        # Try to parse each potential JSON object
-                        json.loads(potential_json)
-                        return potential_json
-                    except:
-                        continue
-                        
-                # If we got here, no valid JSON was found
-                print(f"Failed to parse or fix JSON: {original[:500]}", file=sys.stderr)
-                return "{}"
+                # Try to parse this potential JSON object
+                json_obj = json.loads(potential_json)
+                return json_obj
             except:
-                print(f"Failed to apply regex fixes to JSON: {original[:500]}", file=sys.stderr)
-                return "{}"
+                continue
+    
+    return None
 
-def generate_ai_response(prompt):
-    """Generate a response from the AI model with improved error handling."""
-    try:
-        response = model.generate_content(prompt)
-        response_text = response.text.strip()
-        
-        # Remove markdown code blocks if present
-        if response_text.startswith("```json\n") and response_text.endswith("\n```"):
-            response_text = response_text[8:-4]  # Remove ```json\n and \n```
-        elif response_text.startswith("```") and response_text.endswith("```"):
-            response_text = response_text[3:-3]  # Remove ``` and ```
-
-        # Handle potential JSON string escaping issues
-        response_text = response_text.replace('\\"', '"')
-        
-        # Handle the case where the AI adds text before or after the JSON object
-        # Find the first { and the last }
-        start_idx = response_text.find('{')
-        end_idx = response_text.rfind('}')
-        
-        if start_idx >= 0 and end_idx > start_idx:
-            response_text = response_text[start_idx:end_idx+1]
-        
-        # Clean and fix any JSON issues
-        clean_json = clean_json_string(response_text)
-        
-        # Parse the cleaned JSON response
+def generate_ai_response(prompt, expected_keys):
+    """Generate a response from the AI model with improved error handling and retries."""
+    max_attempts = 3
+    
+    for attempt in range(max_attempts):
         try:
-            return json.loads(clean_json)
-        except json.JSONDecodeError as e:
-            print(f"JSON parsing error after cleaning: {str(e)}", file=sys.stderr)
-            print(f"Cleaned JSON that failed parsing: {clean_json[:500]}", file=sys.stderr)
+            # Add explicit instructions to ensure valid JSON
+            structured_prompt = f"""
+            {prompt}
             
-            # Last resort - create a synthetic response with default values
-            if "grammar" in prompt.lower():
-                return {
-                    "score": 70,
-                    "errors": ["Could not analyze grammar fully"],
-                    "suggestions": ["Ensure proper grammar and spelling throughout your resume"]
-                }
-            elif "ats" in prompt.lower():
-                return {
-                    "score": 60,
-                    "matching_keywords": ["Could not analyze fully"],
-                    "missing_keywords": ["Review job description for key requirements"]
-                }
-            else:
-                return {
-                    "content_improvements": ["Add more specific achievements"],
-                    "format_improvements": ["Improve readability"],
-                    "skills_to_highlight": ["Technical skills relevant to the position"]
-                }
-    except Exception as e:
-        print(f"Error generating AI response: {str(e)}", file=sys.stderr)
-        print(traceback.format_exc(), file=sys.stderr)
-        
-        # Create a default response based on the prompt type
-        if "grammar" in prompt.lower():
-            return {
-                "score": 70,
-                "errors": ["Error generating analysis"],
-                "suggestions": ["Ensure proper grammar and spelling throughout your resume"]
-            }
-        elif "ats" in prompt.lower():
-            return {
-                "score": 60,
-                "matching_keywords": ["Error generating analysis"],
-                "missing_keywords": ["Review job description for key requirements"]
-            }
-        else:
-            return {
-                "content_improvements": ["Add more specific achievements"],
-                "format_improvements": ["Improve readability"],
-                "skills_to_highlight": ["Technical skills relevant to the position"]
-            }
+            VERY IMPORTANT: I need your response to be a valid JSON object.
+            Do not include any text before or after the JSON.
+            Do not use markdown code blocks.
+            Ensure all quotation marks are properly escaped.
+            Format the JSON with the exact keys specified and with valid syntax.
+            """
+            
+            response = model.generate_content(structured_prompt)
+            response_text = response.text.strip()
+            
+            # Remove markdown code blocks if present
+            if response_text.startswith("```json") and response_text.endswith("```"):
+                response_text = re.sub(r'^```json\s*', '', response_text)
+                response_text = re.sub(r'\s*```$', '', response_text)
+            elif response_text.startswith("```") and response_text.endswith("```"):
+                response_text = re.sub(r'^```\s*', '', response_text)
+                response_text = re.sub(r'\s*```$', '', response_text)
+            
+            # Try direct JSON parsing first
+            try:
+                result = json.loads(response_text)
+                
+                # Validate keys
+                if all(key in result for key in expected_keys):
+                    return result
+            except json.JSONDecodeError:
+                # If direct parsing fails, try extraction
+                result = extract_json_from_response(response_text)
+                if result and all(key in result for key in expected_keys):
+                    return result
+            
+            # If we're here, either parsing failed or keys were missing
+            print(f"Attempt {attempt+1}: JSON extraction failed or missing keys, retrying...", file=sys.stderr)
+            print(f"Response text (truncated): {response_text[:500]}...", file=sys.stderr)
+            
+            # If this was the last attempt, create a default response
+            if attempt == max_attempts - 1:
+                if "grammar" in prompt.lower():
+                    return {
+                        "score": 75,
+                        "errors": ["Could not fully analyze grammar"],
+                        "suggestions": ["Ensure proper grammar and spelling throughout your resume"]
+                    }
+                elif "ats" in prompt.lower():
+                    return {
+                        "score": 65,
+                        "matching_keywords": ["Could not fully analyze keywords"],
+                        "missing_keywords": ["Review job description for key requirements"]
+                    }
+                else:
+                    return {
+                        "content_improvements": ["Add more specific achievements"],
+                        "format_improvements": ["Improve readability"],
+                        "skills_to_highlight": ["Technical skills relevant to the position"]
+                    }
+                    
+        except Exception as e:
+            print(f"Attempt {attempt+1} error: {str(e)}", file=sys.stderr)
+            if attempt == max_attempts - 1:
+                # This was our last attempt, return a default response
+                if "grammar" in prompt.lower():
+                    return {
+                        "score": 75,
+                        "errors": ["Error in grammar analysis"],
+                        "suggestions": ["Ensure proper grammar and spelling throughout your resume"]
+                    }
+                elif "ats" in prompt.lower():
+                    return {
+                        "score": 65,
+                        "matching_keywords": ["Error in keyword analysis"],
+                        "missing_keywords": ["Review job description for key requirements"]
+                    }
+                else:
+                    return {
+                        "content_improvements": ["Add more specific achievements"],
+                        "format_improvements": ["Improve readability"],
+                        "skills_to_highlight": ["Technical skills relevant to the position"]
+                    }
 
 def extract_text_from_pdf_with_pdfplumber(bytes_data):
     """Extract text from PDF using pdfplumber (better for complex layouts)."""
@@ -301,79 +286,52 @@ def analyze_resume(file_content, file_type, job_description):
 
         # Grammar Analysis with structured prompt and error handling
         grammar_prompt = f"""
-        Analyze the following resume for grammar and writing quality. 
-        Return ONLY a JSON object with this exact structure, ensuring valid JSON format:
-        {{
-          "score": <number between 0-100>,
-          "errors": [<list of grammar/spelling errors found>],
-          "suggestions": [<list of writing improvement suggestions>]
-        }}
-
+        Analyze the following resume for grammar and writing quality. Focus on identifying specific grammar errors, spelling mistakes, and style issues.
+        
+        Your response must be a JSON object with exactly these keys:
+        - score: a number between 0-100 representing overall writing quality
+        - errors: an array of specific grammar/spelling errors found
+        - suggestions: an array of writing improvement suggestions
+        
         Resume Text:
         {cleaned_resume}
         """
-        grammar_analysis = generate_ai_response(grammar_prompt)
-        
-        # Validate grammar analysis results
-        if "score" not in grammar_analysis:
-            grammar_analysis = {
-                "score": 70,  # Default score
-                "errors": grammar_analysis.get("errors", []),
-                "suggestions": grammar_analysis.get("suggestions", ["Improve clarity and conciseness"])
-            }
+        grammar_analysis = generate_ai_response(grammar_prompt, ["score", "errors", "suggestions"])
 
         # ATS Analysis with structured prompt
         ats_prompt = f"""
         You are an ATS (Applicant Tracking System) analyzer.
-        Carefully analyze this resume against the job description.
-        Return ONLY a JSON object with this exact structure, ensuring valid JSON format:
-        {{
-          "score": <number between 0-100 indicating match percentage>,
-          "matching_keywords": [<list of keywords found in both resume and job description>],
-          "missing_keywords": [<list of important keywords from job description missing in resume>]
-        }}
-
+        Carefully analyze this resume against the job description to determine keyword matches and gaps.
+        
+        Your response must be a JSON object with exactly these keys:
+        - score: a number between 0-100 indicating match percentage
+        - matching_keywords: an array of keywords found in both resume and job description
+        - missing_keywords: an array of important keywords from job description missing in resume
+        
         Job Description:
         {job_description}
 
         Resume:
         {cleaned_resume}
         """
-        ats_analysis = generate_ai_response(ats_prompt)
-        
-        # Validate ATS analysis results
-        if "score" not in ats_analysis:
-            ats_analysis = {
-                "score": 60,  # Default score
-                "matching_keywords": ats_analysis.get("matching_keywords", []),
-                "missing_keywords": ats_analysis.get("missing_keywords", ["Review job description for key requirements"])
-            }
+        ats_analysis = generate_ai_response(ats_prompt, ["score", "matching_keywords", "missing_keywords"])
 
         # Improvement Suggestions with structured prompt
         suggestions_prompt = f"""
         As a professional resume consultant, provide improvement suggestions for this resume based on the job description.
-        Return ONLY a JSON object with this exact structure, ensuring valid JSON format:
-        {{
-          "content_improvements": [<list of specific content improvement suggestions>],
-          "format_improvements": [<list of format improvement suggestions>],
-          "skills_to_highlight": [<list of key skills that should be emphasized>]
-        }}
-
+        
+        Your response must be a JSON object with exactly these keys:
+        - content_improvements: an array of specific content improvement suggestions
+        - format_improvements: an array of format improvement suggestions
+        - skills_to_highlight: an array of key skills that should be emphasized
+        
         Job Description:
         {job_description}
 
         Resume:
         {cleaned_resume}
         """
-        suggestions = generate_ai_response(suggestions_prompt)
-        
-        # Validate suggestions results
-        if not isinstance(suggestions.get("content_improvements"), list):
-            suggestions = {
-                "content_improvements": ["Add more specific achievements"],
-                "format_improvements": suggestions.get("format_improvements", ["Improve readability"]) if isinstance(suggestions.get("format_improvements"), list) else ["Improve readability"],
-                "skills_to_highlight": suggestions.get("skills_to_highlight", ["Technical skills relevant to the position"]) if isinstance(suggestions.get("skills_to_highlight"), list) else ["Technical skills relevant to the position"]
-            }
+        suggestions = generate_ai_response(suggestions_prompt, ["content_improvements", "format_improvements", "skills_to_highlight"])
 
         # Combine all analyses
         final_result = {
@@ -385,12 +343,13 @@ def analyze_resume(file_content, file_type, job_description):
         # Verify the result can be serialized to JSON
         try:
             json.dumps(final_result)
+            return final_result
         except Exception as e:
             print(f"Error serializing final result: {str(e)}", file=sys.stderr)
             # Create a safe fallback response
             return {
                 "grammar_analysis": {
-                    "score": 70,
+                    "score": 75,
                     "errors": ["Analysis completed with some issues"],
                     "suggestions": ["Review for grammar and spelling"]
                 },
@@ -406,8 +365,6 @@ def analyze_resume(file_content, file_type, job_description):
                 }
             }
 
-        return final_result
-
     except Exception as e:
         print(f"Error in analyze_resume: {str(e)}", file=sys.stderr)
         print(traceback.format_exc(), file=sys.stderr)
@@ -416,7 +373,7 @@ def analyze_resume(file_content, file_type, job_description):
         return {
             "error": f"Analysis completed with issues: {str(e)}",
             "grammar_analysis": {
-                "score": 70,
+                "score": 75,
                 "errors": ["Analysis completed with some issues"],
                 "suggestions": ["Review for grammar and spelling"]
             },
@@ -459,7 +416,7 @@ if __name__ == "__main__":
             print(f"Error serializing result to JSON: {str(e)}", file=sys.stderr)
             # Send a simple valid JSON response if all else fails
             fallback = {
-                "grammar_analysis": {"score": 70, "errors": [], "suggestions": ["Analysis completed with some issues"]},
+                "grammar_analysis": {"score": 75, "errors": [], "suggestions": ["Analysis completed with some issues"]},
                 "ats_analysis": {"score": 65, "matching_keywords": [], "missing_keywords": ["Review job description"]},
                 "suggestions": {"content_improvements": ["Add specific achievements"], "format_improvements": ["Improve formatting"], "skills_to_highlight": ["Relevant technical skills"]}
             }
@@ -471,10 +428,12 @@ if __name__ == "__main__":
         
         # Return error in a structured format
         error_result = {
-            "grammar_analysis": {"score": 70, "errors": [], "suggestions": ["Analysis could not be completed"]},
+            "grammar_analysis": {"score": 75, "errors": [], "suggestions": ["Analysis could not be completed"]},
             "ats_analysis": {"score": 65, "matching_keywords": [], "missing_keywords": ["Please try again"]},
             "suggestions": {"content_improvements": ["Try again with a different format"], "format_improvements": [], "skills_to_highlight": []}
         }
         
         print(json.dumps(error_result))
-        sys.exit(1) 
+        sys.exit(1)
+
+#439
