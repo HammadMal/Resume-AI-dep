@@ -7,8 +7,8 @@ import transparent from "../assets/aa.png";
 import AnalysisResults from './AnalysisResults';
 import { Document, Page, pdfjs } from 'react-pdf';
 
-// Set the worker source to the copied file
-pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+// Set the worker source using CDN for pdfjs-dist v5
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 import { analyzeResume, downloadReport } from '../services/analyzerService';
 import { toast } from 'react-hot-toast';
