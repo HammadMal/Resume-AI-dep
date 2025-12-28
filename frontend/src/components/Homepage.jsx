@@ -8,7 +8,12 @@ import AnalysisResults from './AnalysisResults';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 // Set the worker source locally
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+// pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url
+).toString();
 
 import { analyzeResume, downloadReport } from '../services/analyzerService';
 import { toast } from 'react-hot-toast';
