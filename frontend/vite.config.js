@@ -1,18 +1,17 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
-  plugins: [react()],
-  optimizeDeps: {
-    include: ['pdfjs-dist/build/pdf.worker.min.js']
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          pdfWorker: ['pdfjs-dist/build/pdf.worker.min.js'],
-        },
-      },
-    },
-  },
+  plugins: [
+    react(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs',
+          dest: ''
+        }
+      ]
+    })
+  ],
 });
